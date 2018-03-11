@@ -1,0 +1,63 @@
+<!--javascript color change
+
+
+http://www.ezineasp.net/post/Javascript-Code-to-Change-Text-Color-of-HTML-elements.aspx
+-->	
+
+
+<html>
+<head>
+    <title>Javascript Change CSS Class of Div tag</title>
+    
+    <style type="text/css">
+    
+    .redText,.blueText {
+        width: 200px;
+        font-family: Arial;
+    }
+    
+    .redText {
+        color : #FFFFFF;
+     } 
+     
+     .blueText {
+        color : #FFFF00;
+     }
+
+    </style>
+
+    <script language="javascript" type="text/javascript">
+
+function SetItem(val) { // save Value to local storage
+        document.getElementById('div1').className = val;
+        document.cookie = val;
+}
+        
+function changeCssClass(objDivID)
+        {
+            if(document.getElementById(objDivID).className=='redText')
+                SetItem("blueText");
+            else
+                SetItem("redText");
+        }
+//getElementsByClassName
+    </script>
+
+</head>
+<body>
+
+    <center>
+        <div id="div1" class="redText">
+        By default text indside this HTML div tag is red.
+        Javascript function will change the CSS class<br />
+        of this Div tag and <br />
+        text color will change to blue dynamically.
+        </div>
+        <br />
+<a href="javascript: void(0);" onclick="changeCssClass('div1')">Turn Red</a>
+    </center>
+ <script type="text/javascript" async>
+        document.getElementById('div1').className = document.cookie;
+    </script>
+</body>
+</html>

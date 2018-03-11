@@ -1,0 +1,16 @@
+XZ_OPT=-9e tar -cJf docs.tar.xz docs
+
+177-Python 3 Object Oriented Programming (2010).pdf
+byte_of_python.pdf
+Core Python Applications Programming 3rd.pdf
+en_wikibooks_org-wiki-Non-Programmer-27s_Tutorial_for_Python_3-Print_version.pdf
+GnuPG.High.Level.Cryptography.pdf
+install-archlinux-2013-11-10-archlinux-virtualbox-install-notes.pdf
+learnaholic_me-2013-11-10-archlinux-virtualbox-install-notes.pdf
+Programming-in-Python-3.pdf
+Python For Dummies.pdf
+python_cookbook_3rd_edition.pdf
+py3book30Programming-in-Python-3-examples.tar.gz
+Python_Programming.pdf
+thinkpython.pdf
+Writing idiomatic Python.zip

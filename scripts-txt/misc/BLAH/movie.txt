@@ -1,0 +1,10 @@
+https://ph2dvs.oloadcdn.net/dl/l/mz6TviI3wPE/l0001lZ04TU/Back.To.The.Future.1985.1080p.mp4?mime=true
+https://oqfnx1.oloadcdn.net/dl/l/qFLv4FfFmNs/RdFBgwY68vQ/James.Bond.Die.Another.Day.2002.mp4?mime=true
+https://17wy0tv.oloadcdn.net/dl/l/U_zBtgQ1xsc/7XvlKLNcwIo/Point.Break.2015.1080p.BluRay.H264.AAC-RARBG.mp4?mime=true
+http://195.154.215.150/fudtkqbfy35ff5hk253k2bu4ry4vutj7hxvytsigbiz4xvravivpa4ahzkoa/v.mp4
+http://185.49.146.215/yi7orvt3b2gx6vim4v247x6hmjrsmvvo2w3pqniyh66llotu4oozesivlzhq/v.mp4
+http://195.154.215.150/fudtkqbfy35ff5hk253k2bu4ry4vutj7hxvytsigbiz4xvravivmpiahzkoa/v.mp4
+http://195.154.215.150/fudtkqbfy35ff5hk253k2bu4ry4vutj7hxvytsigbiz4xvravivahiqezkoa/v.mp4
+https://1fgm8jr.oloadcdn.net/dl/l/nIo_2k7Fbvg/xPFhqDaelVc/SW.7.avi.mp4?mime=true
+https://pgli8e.oloadcdn.net/dl/l/eELGn1t19Uo/CK1GzQSkGqk/Beverly.Hills.Cop.1984..mp4?mime=true
+time for x in $(find tezt -type f);do echo 'qwej98v123u8v132hvjkedwevqw'|gpg --batch -q --passphrase-fd 0 --cert-digest-algo SHA512 --cipher-algo AES256 --digest-algo SHA512 --s2k-cipher-algo AES256 --s2k-digest-algo SHA512 --s2k-mode 3 --s2k-count 64981052 --compress-algo 0 -c $x;done

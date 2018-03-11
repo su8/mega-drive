@@ -1,0 +1,254 @@
+sound.o: sound.c config.h /usr/local/include/mpd/client.h \
+ /usr/local/include/mpd/audio_format.h \
+ /usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include/stdint.h \
+ /usr/include/stdint.h \
+ /usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include-fixed/sys/cdefs.h \
+ /usr/include/sys/_types.h /usr/include/machine/_types.h \
+ /usr/include/x86/_types.h /usr/include/machine/_stdint.h \
+ /usr/include/x86/_stdint.h /usr/include/sys/_stdint.h \
+ /usr/local/include/mpd/capabilities.h /usr/local/include/mpd/recv.h \
+ /usr/local/include/mpd/compiler.h \
+ /usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include/stdbool.h \
+ /usr/local/include/mpd/connection.h /usr/local/include/mpd/protocol.h \
+ /usr/local/include/mpd/error.h /usr/local/include/mpd/database.h \
+ /usr/local/include/mpd/directory.h /usr/include/time.h \
+ /usr/include/sys/_null.h /usr/include/sys/timespec.h \
+ /usr/include/sys/_timespec.h /usr/include/xlocale/_time.h \
+ /usr/local/include/mpd/entity.h /usr/local/include/mpd/song.h \
+ /usr/local/include/mpd/tag.h /usr/local/include/mpd/idle.h \
+ /usr/local/include/mpd/list.h /usr/local/include/mpd/message.h \
+ /usr/local/include/mpd/mixer.h /usr/local/include/mpd/output.h \
+ /usr/local/include/mpd/pair.h /usr/local/include/mpd/password.h \
+ /usr/local/include/mpd/player.h /usr/local/include/mpd/playlist.h \
+ /usr/local/include/mpd/queue.h /usr/local/include/mpd/response.h \
+ /usr/local/include/mpd/search.h /usr/local/include/mpd/send.h \
+ /usr/local/include/mpd/settings.h /usr/local/include/mpd/stats.h \
+ /usr/local/include/mpd/status.h /usr/local/include/mpd/sticker.h \
+ /usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include/stddef.h \
+ /usr/local/include/mpd/version.h /usr/local/include/alsa/asoundlib.h \
+ /usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include-fixed/unistd.h \
+ /usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include-fixed/sys/types.h \
+ /usr/include/machine/endian.h /usr/include/x86/endian.h \
+ /usr/include/sys/_pthreadtypes.h /usr/include/sys/select.h \
+ /usr/include/sys/_sigset.h /usr/include/sys/_timeval.h \
+ /usr/include/sys/unistd.h \
+ /usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include-fixed/stdio.h \
+ /usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include/stdarg.h \
+ /usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include-fixed/stdlib.h \
+ /usr/include/string.h /usr/include/strings.h \
+ /usr/include/xlocale/_strings.h /usr/include/xlocale/_string.h \
+ /usr/include/fcntl.h /usr/include/assert.h /usr/include/sys/poll.h \
+ /usr/include/errno.h /usr/include/sys/endian.h \
+ /usr/local/include/alsa/asoundef.h /usr/local/include/alsa/version.h \
+ /usr/local/include/alsa/global.h /usr/local/include/alsa/input.h \
+ /usr/local/include/alsa/output.h /usr/local/include/alsa/error.h \
+ /usr/local/include/alsa/conf.h /usr/local/include/alsa/pcm.h \
+ /usr/local/include/alsa/rawmidi.h /usr/local/include/alsa/timer.h \
+ /usr/local/include/alsa/hwdep.h /usr/local/include/alsa/control.h \
+ /usr/local/include/alsa/mixer.h /usr/local/include/alsa/seq_event.h \
+ /usr/local/include/alsa/seq.h /usr/local/include/alsa/seqmid.h \
+ /usr/local/include/alsa/seq_midi_event.h include/headers.h \
+ /usr/include/inttypes.h /usr/include/machine/_inttypes.h \
+ /usr/include/x86/_inttypes.h /usr/include/sys/stdint.h \
+ include/options_constants.h include/options_generator.h \
+ include/non_x11_colours.h include/functions_constants.h \
+ include/../prototypes/functions.h include/../prototypes/common.h \
+ prototypes/sound.h
+
+config.h:
+
+/usr/local/include/mpd/client.h:
+
+/usr/local/include/mpd/audio_format.h:
+
+/usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include/stdint.h:
+
+/usr/include/stdint.h:
+
+/usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include-fixed/sys/cdefs.h:
+
+/usr/include/sys/_types.h:
+
+/usr/include/machine/_types.h:
+
+/usr/include/x86/_types.h:
+
+/usr/include/machine/_stdint.h:
+
+/usr/include/x86/_stdint.h:
+
+/usr/include/sys/_stdint.h:
+
+/usr/local/include/mpd/capabilities.h:
+
+/usr/local/include/mpd/recv.h:
+
+/usr/local/include/mpd/compiler.h:
+
+/usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include/stdbool.h:
+
+/usr/local/include/mpd/connection.h:
+
+/usr/local/include/mpd/protocol.h:
+
+/usr/local/include/mpd/error.h:
+
+/usr/local/include/mpd/database.h:
+
+/usr/local/include/mpd/directory.h:
+
+/usr/include/time.h:
+
+/usr/include/sys/_null.h:
+
+/usr/include/sys/timespec.h:
+
+/usr/include/sys/_timespec.h:
+
+/usr/include/xlocale/_time.h:
+
+/usr/local/include/mpd/entity.h:
+
+/usr/local/include/mpd/song.h:
+
+/usr/local/include/mpd/tag.h:
+
+/usr/local/include/mpd/idle.h:
+
+/usr/local/include/mpd/list.h:
+
+/usr/local/include/mpd/message.h:
+
+/usr/local/include/mpd/mixer.h:
+
+/usr/local/include/mpd/output.h:
+
+/usr/local/include/mpd/pair.h:
+
+/usr/local/include/mpd/password.h:
+
+/usr/local/include/mpd/player.h:
+
+/usr/local/include/mpd/playlist.h:
+
+/usr/local/include/mpd/queue.h:
+
+/usr/local/include/mpd/response.h:
+
+/usr/local/include/mpd/search.h:
+
+/usr/local/include/mpd/send.h:
+
+/usr/local/include/mpd/settings.h:
+
+/usr/local/include/mpd/stats.h:
+
+/usr/local/include/mpd/status.h:
+
+/usr/local/include/mpd/sticker.h:
+
+/usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include/stddef.h:
+
+/usr/local/include/mpd/version.h:
+
+/usr/local/include/alsa/asoundlib.h:
+
+/usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include-fixed/unistd.h:
+
+/usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include-fixed/sys/types.h:
+
+/usr/include/machine/endian.h:
+
+/usr/include/x86/endian.h:
+
+/usr/include/sys/_pthreadtypes.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/sys/_sigset.h:
+
+/usr/include/sys/_timeval.h:
+
+/usr/include/sys/unistd.h:
+
+/usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include-fixed/stdio.h:
+
+/usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include/stdarg.h:
+
+/usr/local/lib/gcc48/gcc/x86_64-portbld-freebsd10.1/4.8.5/include-fixed/stdlib.h:
+
+/usr/include/string.h:
+
+/usr/include/strings.h:
+
+/usr/include/xlocale/_strings.h:
+
+/usr/include/xlocale/_string.h:
+
+/usr/include/fcntl.h:
+
+/usr/include/assert.h:
+
+/usr/include/sys/poll.h:
+
+/usr/include/errno.h:
+
+/usr/include/sys/endian.h:
+
+/usr/local/include/alsa/asoundef.h:
+
+/usr/local/include/alsa/version.h:
+
+/usr/local/include/alsa/global.h:
+
+/usr/local/include/alsa/input.h:
+
+/usr/local/include/alsa/output.h:
+
+/usr/local/include/alsa/error.h:
+
+/usr/local/include/alsa/conf.h:
+
+/usr/local/include/alsa/pcm.h:
+
+/usr/local/include/alsa/rawmidi.h:
+
+/usr/local/include/alsa/timer.h:
+
+/usr/local/include/alsa/hwdep.h:
+
+/usr/local/include/alsa/control.h:
+
+/usr/local/include/alsa/mixer.h:
+
+/usr/local/include/alsa/seq_event.h:
+
+/usr/local/include/alsa/seq.h:
+
+/usr/local/include/alsa/seqmid.h:
+
+/usr/local/include/alsa/seq_midi_event.h:
+
+include/headers.h:
+
+/usr/include/inttypes.h:
+
+/usr/include/machine/_inttypes.h:
+
+/usr/include/x86/_inttypes.h:
+
+/usr/include/sys/stdint.h:
+
+include/options_constants.h:
+
+include/options_generator.h:
+
+include/non_x11_colours.h:
+
+include/functions_constants.h:
+
+include/../prototypes/functions.h:
+
+include/../prototypes/common.h:
+
+prototypes/sound.h:

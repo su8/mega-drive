@@ -1,0 +1,50 @@
+This patch adds useless gap between windows and removes everything (gap and border)
+in tiling mode for aesthetic purpose. The size of the gap is configured in config.h
+Source: http://dwm.suckless.org/patches/uselessgap
+Edited by me because the source was incomplete
+--- a/dwm.c 2015-03-23 19:49:50.305463478 +0200
++++ b/dwm.c 2015-03-23 19:49:50.305463478 +0200
+@@ -290,6 +290,7 @@
+ static DC dc;
+ static Monitor *mons = NULL, *selmon = NULL;
+ static Window root;
++static int globalborder;
+ 
+ /* configuration, allows nested code to access above variables */
+ #include "config.h"
+@@ -1398,10 +1399,16 @@
+ resizeclient(Client *c, int x, int y, int w, int h) {
+ 	XWindowChanges wc;
+ 
+-	c->oldx = c->x; c->x = wc.x = x;
+-	c->oldy = c->y; c->y = wc.y = y;
+-	c->oldw = c->w; c->w = wc.width = w;
+-	c->oldh = c->h; c->h = wc.height = h;
++    if(c->isfloating || selmon->lt[selmon->sellt]->arrange == NULL) { globalborder = 0 ; }
++    else {
++        if (selmon->lt[selmon->sellt]->arrange == monocle) { globalborder = 0 - borderpx ; }
++        else { globalborder =  gappx ; }
++    }
++
++    c->oldx = c->x; c->x = wc.x = x + globalborder;
++    c->oldy = c->y; c->y = wc.y = y + globalborder;
++    c->oldw = c->w; c->w = wc.width = w - (2 * globalborder);
++    c->oldh = c->h; c->h = wc.height = h - (2 * globalborder);
+ 	wc.border_width = c->bw;
+ 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
+ 	configure(c);
+@@ -1789,12 +1796,12 @@
+ 		if(i < m->nmaster) {
+ 			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
+ 			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), False);
+-			my += HEIGHT(c);
++			my += HEIGHT(c) + (2 * globalborder);
+ 		}
+ 		else {
+ 			h = (m->wh - ty) / (n - i);
+ 			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), False);
+-			ty += HEIGHT(c);
++			ty += HEIGHT(c) + (2 * globalborder);
+ 		}
+ }
+ 

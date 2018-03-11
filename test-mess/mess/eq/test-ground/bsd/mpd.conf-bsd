@@ -1,0 +1,16 @@
+music_directory "/tmp/music"
+playlist_directory "/tmp/music"
+db_file "/tmp/mpddb"
+log_file "/tmp/mpdlog"
+state_file "/tmp/mpdstate"
+pid_file "/tmp/mpdpid"
+log_level "default"
+user "musicpd"
+
+audio_output {
+  type "oss"
+  name "My sound card"
+}
+
+port "6600"
+bind_to_address "127.0.0.1"

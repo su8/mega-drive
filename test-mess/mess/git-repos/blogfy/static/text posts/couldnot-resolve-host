@@ -1,0 +1,29 @@
+title:  CentOS: Couldn't resolve host 'mirrorlist.centos.org'
+date:   2013-06-27
+author: Aaron
+
+<p>So you just did a brand new installation or re-installation of CentOS and tried to update the distro via <code>yum update</code>, but faced <strong>"Couldn't resolve host 'mirrorlist.centos.org'" Error: Cannot find a valid baseurl for repo: base</strong> Let's find how to fix it.</p>
+
+<p>Making sure that all network interfaces are up and runnig</p>
+
+<pre>ifconfig
+<p>ping google.com</p></pre>
+
+<p>What is telling you the ping - uknown host ? How many NICs do you see from the ifconfig output? I see just one named 'lo'. Let's edit eth0 and make it up and running.</p>
+
+<pre>vi /etc/sysconfig/network-scripts/ifcfg-eth0</pre>
+
+<p>Make sure to change <strong>ONBOOT=no</strong> to <strong>ONBOOT=yes</strong>, edit another file to add your gateway:</p>
+
+<pre>vi /etc/sysconfig/network</pre>
+
+<p>Add on the bottom: <strong>GATEWAY=192.168.10.20</strong>, replace the ip with yours. Last file to edit - the dns resolver:</p>
+
+<pre>vi /etc/resolv.conf</pre>
+
+<p>Include google public dns servers IP</p>
+
+<pre>nameserver 8.8.8.8
+<p>nameserver 8.8.4.4</p></pre>
+
+<p>Almost done, just restart the network and everything will be up and running after few seconds: <code>service network restart</code></p>

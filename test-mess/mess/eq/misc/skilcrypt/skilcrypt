@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+
+# Copyright 03/19/2016 Aaron Caffrey https://github.com/wifiextender
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+__printf() { printf '%s\n' "$@" ;}
+
+__skilcrypt_rmcmd() {
+    _switch_opt="$1"
+    shift
+
+    find "$@" -type f ${_switch_opt} -name "*.gpg" -print0 | xargs -0 rm --force
+
+    __printf 'Done !'
+}
+
+__skilcrypt_invoke_gpg() {
+    _da_action=$1
+    shift
+
+    [[ $1 == "pwf" ]] && {
+        shift
+
+        _da_pazZz=$1
+        [[ ! -f ${_da_pazZz} ]] && {
+            __printf "Ooops, ${_da_pazZz} doesnt exist."
+            __printf 'Point the correct location of your password.'
+            return
+        }
+
+        _pw_switch='--passphrase-file'
+        shift
+
+    } || {
+        while [[ -z ${_da_pazZz} ]]
+        do
+            __printf "Enter your password to ${_da_action} your files."
+            __printf 'Make sure that you remember your password !'
+            read -s -r _da_pazZz
+        done
+
+        _pw_switch='--passphrase'
+    }
+
+    __printf 'Working... please wait'
+
+    [[ ${_da_action} == "encrypt" ]] && {
+        find "$@" -type f ! -name "*.gpg" -print0 | xargs -0 -I{} \
+            gpg --batch --quiet ${_pw_switch} ${_da_pazZz} \
+            --cert-digest-algo SHA512 --cipher-algo AES256 \
+            --digest-algo SHA512 --s2k-cipher-algo AES256 --s2k-digest-algo SHA512 \
+            --s2k-mode 3 --s2k-count 64981052 --compress-algo 0 --symmetric {}
+    } || {
+        find "$@" -type f -name "*.gpg" -print0 | xargs -0 -I{} \
+            gpg --batch --quiet ${_pw_switch} ${_da_pazZz} {}
+    }
+
+    __printf 'Done !'
+
+    unset _da_pazZz
+}
+
+skilcrypt_main() {
+    declare -a _targets
+    _targets=('encrypt' 'decrypt' 'rmsrc' 'rmgpg')
+    [[ -z $1 ]] || [[ ! " ${_targets[@]} " =~ " $1 " ]] && {
+        __printf 'skilcrypt [option] target(s)'
+        __printf 'Available options: encrypt [pwf], decrypt [pwf], rmsrc, rmgpg'
+        __printf ''
+        __printf 'Non-interactive (password stored in file) encryption/decryption:'
+        __printf 'skilcrypt encrypt/decrypt pwf /tmp/password file1 file2 folder3'
+        __printf ''
+        __printf 'Interactive (ask for password) encryption/decryption:'
+        __printf 'skilcrypt encrypt/decrypt file1 file2 folder3'
+        __printf ''
+        __printf 'Think before you invoke the rmsrc and rmgpg options !'
+        __printf 'rmsrc  --  remove the source files and leave only the encrypted one'
+        __printf 'rmgpg  --  remove the encrypted files and leave only the source one'
+        return
+    }
+
+    [[ -z $2 ]] && {
+        __printf 'The target(s) cannot be empty.'
+        return
+    }
+
+    [[ $2 == "pwf" ]] && {
+        [[ -z $3 ]] || [[ ! -f $3 ]] && {
+            __printf 'Point the correct location of your password.'
+            return
+        }
+
+        [[ -z $4 ]] && {
+            __printf "What are we going to $1 ?"
+            return
+        }
+    }
+
+    _sw_opt=$1
+    shift
+
+    case ${_sw_opt} in
+        encrypt)     __skilcrypt_invoke_gpg   'encrypt'   "$@"      ;;
+        decrypt)     __skilcrypt_invoke_gpg   'decrypt'   "$@"      ;;
+        rmsrc)       __skilcrypt_rmcmd        '!'         "$@"      ;;
+        rmgpg)       __skilcrypt_rmcmd        ''          "$@"      ;;
+    esac
+
+}
+
+skilcrypt_main "$@"

@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+
+##########################################################################
+#
+#         IN DEVELOPMENT  IN DEVELOPMENT  IN DEVELOPMENT  IN DEVELOPMENT
+#         IN DEVELOPMENT  IN DEVELOPMENT  IN DEVELOPMENT  IN DEVELOPMENT
+#
+##########################################################################
+
+
+
+# Copyright 03/20/2016 Aaron Caffrey https://github.com/wifiextender
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+
+# Adjust those variables
+SOURCE_FILES="$HOME/Documents/cloud"
+ENCRYPTED_FILES="$HOME/encrypted_cloud_files"
+PASSWORD_FILE='/tmp/pws'
+
+
+### Don't touch anything below this line ###
+
+[[ ! -d "${ENCRYPTED_FILES}" ]] && {
+    mkdir -p "${ENCRYPTED_FILES}"
+
+    # Make the directory older than the source one
+    # in order to encrypt and copy all $SOURCE_FILES
+    touch -d "9 years ago" "${ENCRYPTED_FILES}"
+}
+
+#while true
+#do
+    declare -a _check_filez
+    _check_filez=(`find ${SOURCE_FILES} -type f -neweram ${ENCRYPTED_FILES}`)
+
+    [[ ! -z "${_check_filez[@]}" ]] && {
+
+        #echo 'cd source files'
+
+        #cd "${SOURCE_FILES}"
+
+        #echo 'making dirs'
+
+        # make the dirs
+        #find . -type d -print0 | \
+        #    xargs -0 -I{} mkdir -p "${ENCRYPTED_FILES}"/{}
+
+        echo 'calling gpg'
+
+        # encrypt the changed/newer files
+        find "${SOURCE_FILES}" -type f -neweram "${ENCRYPTED_FILES}" -print0 | xargs -0 -I{} gpg --batch --quiet --passphrase-file "${PASSWORD_FILE}" --cert-digest-algo SHA512 --cipher-algo AES256 --digest-algo SHA512 --s2k-cipher-algo AES256 --s2k-digest-algo SHA512 --s2k-mode 3 --s2k-count 64981052 --compress-algo 0 --symmetric {} ;
+
+        echo 'encryption done'
+
+        # Now move them
+        #find . -type f -name "*.gpg" -print0 | \
+        #    xargs -0 -I{} mv --force {} ${ENCRYPTED_FILES}/{}
+
+    }
+
+    # Be resource friendly
+    #sleep 3
+
+#done

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)http://wiki.osdev.org/System_Management_BIOS -->
+<html lang="en" dir="ltr" class="client-js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>System Management BIOS - OSDev Wiki</title>
+
+<meta name="generator" content="MediaWiki 1.18.0">
+<link rel="shortcut icon" href="http://wiki.osdev.org/favicon.ico">
+<link rel="search" type="application/opensearchdescription+xml" href="http://wiki.osdev.org/opensearch_desc.php" title="OSDev Wiki (en)">
+<link rel="EditURI" type="application/rsd+xml" href="http://wiki.osdev.org/api.php?action=rsd">
+<link rel="alternate" type="application/atom+xml" title="OSDev Wiki Atom feed" href="http://wiki.osdev.org/index.php?title=Special:RecentChanges&amp;feed=atom">
+<link rel="stylesheet" href="./System Management BIOS - OSDev Wiki_files/load.php">
+<style type="text/css" media="all">.mw-collapsible-toggle{float:right} li .mw-collapsible-toggle{float:none} .mw-collapsible-toggle-li{list-style:none}
+
+/* cache key: wikidb:resourceloader:filter:minify-css:4:4250852ed2349a0d4d0fc6509a3e7d4c */
+</style><style type="text/css" media="all">.js-messagebox{margin:1em 5%;padding:0.5em 2.5%;border:1px solid #ccc;background-color:#fcfcfc;font-size:0.8em}.js-messagebox .js-messagebox-group{margin:1px;padding:0.5em 2.5%;border-bottom:1px solid #ddd}.js-messagebox .js-messagebox-group:last-child{border-bottom:thin none transparent}
+
+/* cache key: wikidb:resourceloader:filter:minify-css:4:8b08bdc91c52a9ffba396dccfb5b473c */
+</style><meta name="ResourceLoaderDynamicStyles" content="">
+<link rel="stylesheet" href="./System Management BIOS - OSDev Wiki_files/load(1).php">
+<style>a:lang(ar),a:lang(ckb),a:lang(fa),a:lang(kk-arab),a:lang(mzn),a:lang(ps),a:lang(ur){text-decoration:none}a.new,#quickbar a.new{color:#ba0000}
+
+/* cache key: wikidb:resourceloader:filter:minify-css:4:c88e2bcd56513749bec09a7e29cb3ffa */
+</style>
+<script src="./System Management BIOS - OSDev Wiki_files/load(2).php"></script><script src="./System Management BIOS - OSDev Wiki_files/load(3).php"></script>
+<script>if(window.mw){
+	mw.config.set({"wgCanonicalNamespace": "", "wgCanonicalSpecialPageName": false, "wgNamespaceNumber": 0, "wgPageName": "System_Management_BIOS", "wgTitle": "System Management BIOS", "wgCurRevisionId": 16275, "wgArticleId": 2226, "wgIsArticle": true, "wgAction": "view", "wgUserName": null, "wgUserGroups": ["*"], "wgCategories": ["X86"], "wgBreakFrames": false, "wgRestrictionEdit": [], "wgRestrictionMove": []});
+}
+</script><script>if(window.mw){
+	mw.loader.load(["mediawiki.page.startup"]);
+}
+</script><script type="text/javascript" src="./System Management BIOS - OSDev Wiki_files/load(4).php"></script>
+<style type="text/css">/*<![CDATA[*/
+.source-c {line-height: normal;}
+.source-c li, .source-c pre {
+	line-height: normal; border: 0px none white;
+}
+/**
+ * GeSHi Dynamically Generated Stylesheet
+ * --------------------------------------
+ * Dynamically generated stylesheet for c
+ * CSS class: source-c, CSS id: 
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ * --------------------------------------
+ */
+.c.source-c .de1, .c.source-c .de2 {font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;}
+.c.source-c  {font-family:monospace;}
+.c.source-c .imp {font-weight: bold; color: red;}
+.c.source-c li, .c.source-c .li1 {font-weight: normal; vertical-align:top;}
+.c.source-c .ln {width:1px;text-align:right;margin:0;padding:0 2px;vertical-align:top;}
+.c.source-c .li2 {font-weight: bold; vertical-align:top;}
+.c.source-c .kw1 {color: #b1b100;}
+.c.source-c .kw2 {color: #000000; font-weight: bold;}
+.c.source-c .kw3 {color: #000066;}
+.c.source-c .kw4 {color: #993333;}
+.c.source-c .co1 {color: #666666; font-style: italic;}
+.c.source-c .co2 {color: #339933;}
+.c.source-c .coMULTI {color: #808080; font-style: italic;}
+.c.source-c .es0 {color: #000099; font-weight: bold;}
+.c.source-c .es1 {color: #000099; font-weight: bold;}
+.c.source-c .es2 {color: #660099; font-weight: bold;}
+.c.source-c .es3 {color: #660099; font-weight: bold;}
+.c.source-c .es4 {color: #660099; font-weight: bold;}
+.c.source-c .es5 {color: #006699; font-weight: bold;}
+.c.source-c .br0 {color: #009900;}
+.c.source-c .sy0 {color: #339933;}
+.c.source-c .st0 {color: #ff0000;}
+.c.source-c .nu0 {color: #0000dd;}
+.c.source-c .nu6 {color: #208080;}
+.c.source-c .nu8 {color: #208080;}
+.c.source-c .nu12 {color: #208080;}
+.c.source-c .nu16 {color:#800080;}
+.c.source-c .nu17 {color:#800080;}
+.c.source-c .nu18 {color:#800080;}
+.c.source-c .nu19 {color:#800080;}
+.c.source-c .me1 {color: #202020;}
+.c.source-c .me2 {color: #202020;}
+.c.source-c .ln-xtra, .c.source-c li.ln-xtra, .c.source-c div.ln-xtra {background-color: #ffc;}
+.c.source-c span.xtra { display:block; }
+
+/*]]>*/
+</style>
+<style type="text/css">/*<![CDATA[*/
+@import "/index.php?title=MediaWiki:Geshi.css&usemsgcache=yes&action=raw&ctype=text/css&smaxage=18000";
+/*]]>*/
+</style><style type="text/css">/*<![CDATA[*/
+.source-asm {line-height: normal;}
+.source-asm li, .source-asm pre {
+	line-height: normal; border: 0px none white;
+}
+/**
+ * GeSHi Dynamically Generated Stylesheet
+ * --------------------------------------
+ * Dynamically generated stylesheet for asm
+ * CSS class: source-asm, CSS id: 
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ * --------------------------------------
+ */
+.asm.source-asm .de1, .asm.source-asm .de2 {font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;}
+.asm.source-asm  {font-family:monospace;}
+.asm.source-asm .imp {font-weight: bold; color: red;}
+.asm.source-asm li, .asm.source-asm .li1 {font-weight: normal; vertical-align:top;}
+.asm.source-asm .ln {width:1px;text-align:right;margin:0;padding:0 2px;vertical-align:top;}
+.asm.source-asm .li2 {font-weight: bold; vertical-align:top;}
+.asm.source-asm .kw1 {color: #00007f; font-weight: bold;}
+.asm.source-asm .kw2 {color: #0000ff; font-weight: bold;}
+.asm.source-asm .kw3 {color: #00007f;}
+.asm.source-asm .kw4 {color: #000000; font-weight: bold;}
+.asm.source-asm .kw5 {color: #000000; font-weight: bold;}
+.asm.source-asm .co1 {color: #666666; font-style: italic;}
+.asm.source-asm .co2 {color: #adadad; font-style: italic;}
+.asm.source-asm .es0 {color: #000099; font-weight: bold;}
+.asm.source-asm .br0 {color: #009900; font-weight: bold;}
+.asm.source-asm .sy0 {color: #339933;}
+.asm.source-asm .st0 {color: #7f007f;}
+.asm.source-asm .nu0 {color: #0000ff;}
+.asm.source-asm .ln-xtra, .asm.source-asm li.ln-xtra, .asm.source-asm div.ln-xtra {background-color: #ffc;}
+.asm.source-asm span.xtra { display:block; }
+
+/*]]>*/
+</style>
+<style type="text/css">/*<![CDATA[*/
+@import "/index.php?title=MediaWiki:Geshi.css&usemsgcache=yes&action=raw&ctype=text/css&smaxage=18000";
+/*]]>*/
+</style><!--[if lt IE 7]><style type="text/css">body{behavior:url("/skins/vector/csshover.min.htc")}</style><![endif]--><style type="text/css">
+:root #content > #right > .dose > .dosesingle,
+:root #content > #center > .dose > .dosesingle
+{ display: none !important; }</style></head>
+<body class="mediawiki ltr sitedir-ltr ns-0 ns-subject page-System_Management_BIOS action-view skin-vector">
+		<div id="mw-page-base" class="noprint"></div>
+		<div id="mw-head-base" class="noprint"></div>
+		<!-- content -->
+		<div id="content">
+			<a id="top"></a>
+			<div id="mw-js-message" style="display:none;" class="js-messagebox"></div>
+						<!-- firstHeading -->
+			<h1 id="firstHeading" class="firstHeading">System Management BIOS</h1>
+			<!-- /firstHeading -->
+			<!-- bodyContent -->
+			<div id="bodyContent">
+								<!-- tagline -->
+				<div id="siteSub">From OSDev Wiki</div>
+				<!-- /tagline -->
+								<!-- subtitle -->
+				<div id="contentSub"></div>
+				<!-- /subtitle -->
+																<!-- jumpto -->
+				<div id="jump-to-nav">
+					Jump to: <a href="http://wiki.osdev.org/System_Management_BIOS#mw-head">navigation</a>,
+					<a href="http://wiki.osdev.org/System_Management_BIOS#p-search">search</a>
+				</div>
+				<!-- /jumpto -->
+								<!-- bodycontent -->
+				<div lang="en" dir="ltr" class="mw-content-ltr"><p>System Management <a href="http://wiki.osdev.org/BIOS" title="BIOS">BIOS</a> (SMBIOS) is a standard developed by <a rel="nofollow" class="external text" href="http://dmtf.org/">DMTF</a>.
+The purpose of this standard is to allow the operating system to retrieve information about the PC. 
+</p><p>On booting the SMBIOS will put a table somewhere in memory. By parsing this table it is possible to access information about the computer and its capabilities.
+</p>
+<table id="toc" class="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2><span class="toctoggle">&nbsp;[<a href="http://wiki.osdev.org/System_Management_BIOS#" class="internal" id="togglelink">hide</a>]&nbsp;</span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="http://wiki.osdev.org/System_Management_BIOS#Locating_the_SMBIOS_Entry_Point_Table"><span class="tocnumber">1</span> <span class="toctext">Locating the SMBIOS Entry Point Table</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="http://wiki.osdev.org/System_Management_BIOS#Parsing_the_Entry_Point_Table"><span class="tocnumber">2</span> <span class="toctext">Parsing the Entry Point Table</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="http://wiki.osdev.org/System_Management_BIOS#Header_Types"><span class="tocnumber">3</span> <span class="toctext">Header Types</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="http://wiki.osdev.org/System_Management_BIOS#See_Also"><span class="tocnumber">4</span> <span class="toctext">See Also</span></a>
+<ul>
+<li class="toclevel-2 tocsection-5"><a href="http://wiki.osdev.org/System_Management_BIOS#Forum_Threads"><span class="tocnumber">4.1</span> <span class="toctext">Forum Threads</span></a></li>
+<li class="toclevel-2 tocsection-6"><a href="http://wiki.osdev.org/System_Management_BIOS#External_Links"><span class="tocnumber">4.2</span> <span class="toctext">External Links</span></a></li>
+</ul>
+</li>
+</ul>
+</td></tr></tbody></table>
+<h2> <span class="mw-headline" id="Locating_the_SMBIOS_Entry_Point_Table"> Locating the SMBIOS Entry Point Table </span></h2>
+<p>The SMBIOS Entry Point Table is located somewhere between the addresses 0xF0000 and 0xFFFFF, and must be on a 16-byte boundary. To find the specific location of the start of the table it is necessary to search that region of memory for the string "_SM_", and then check the structure's checksum (add all bytes and see if the lowest 8 bits of the result are zero).
+</p><p>One example of how this can be done is demonstrated in the below code.
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="c source-c"><pre class="de1">    <span class="kw4">char</span> <span class="sy0">*</span>mem <span class="sy0">=</span> <span class="br0">(</span><span class="kw4">unsigned</span> <span class="kw4">char</span> <span class="sy0">*</span><span class="br0">)</span> <span class="nu12">0xF0000</span><span class="sy0">;</span>
+    <span class="kw4">int</span> length<span class="sy0">,</span> i<span class="sy0">;</span>
+    <span class="kw4">unsigned</span> <span class="kw4">char</span> checksum<span class="sy0">;</span>
+    <span class="kw1">while</span> <span class="br0">(</span><span class="br0">(</span><span class="kw4">unsigned</span> <span class="kw4">int</span><span class="br0">)</span> mem <span class="sy0">&lt;</span> <span class="nu12">0x100000</span><span class="br0">)</span> <span class="br0">{</span>
+        <span class="kw1">if</span> <span class="br0">(</span>mem<span class="br0">[</span><span class="nu0">0</span><span class="br0">]</span> <span class="sy0">==</span> <span class="st0">'_'</span> <span class="sy0">&amp;&amp;</span> mem<span class="br0">[</span><span class="nu0">1</span><span class="br0">]</span> <span class="sy0">==</span> <span class="st0">'S'</span> <span class="sy0">&amp;&amp;</span> mem<span class="br0">[</span><span class="nu0">2</span><span class="br0">]</span> <span class="sy0">==</span> <span class="st0">'M'</span> <span class="sy0">&amp;&amp;</span> mem<span class="br0">[</span><span class="nu0">3</span><span class="br0">]</span> <span class="sy0">==</span> <span class="st0">'_'</span><span class="br0">)</span> <span class="br0">{</span>
+            length <span class="sy0">=</span> mem<span class="br0">[</span><span class="nu0">5</span><span class="br0">]</span><span class="sy0">;</span>
+            checksum <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+            <span class="kw1">for</span><span class="br0">(</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> length<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">)</span> <span class="br0">{</span>
+                checksum <span class="sy0">+=</span> mem<span class="br0">[</span>i<span class="br0">]</span><span class="sy0">;</span>
+            <span class="br0">}</span>
+            <span class="kw1">if</span><span class="br0">(</span>checksum <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">)</span> <span class="kw2">break</span><span class="sy0">;</span>
+        <span class="br0">}</span>
+        mem <span class="sy0">+=</span> <span class="nu0">16</span><span class="sy0">;</span>
+    <span class="br0">}</span></pre></div></div>
+<p>Now mem contains the address of the Entry Point Table.
+Some old systems may not have the SMBIOS. So...
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="c source-c"><pre class="de1">    <span class="kw1">if</span> <span class="br0">(</span><span class="br0">(</span><span class="kw4">unsigned</span> <span class="kw4">int</span><span class="br0">)</span> mem <span class="sy0">==</span> <span class="nu12">0x100000</span><span class="br0">)</span> <span class="br0">{</span>
+        panic<span class="br0">(</span><span class="st0">"No SMBIOS found!"</span><span class="br0">)</span><span class="sy0">;</span>
+    <span class="br0">}</span></pre></div></div>
+<h2> <span class="mw-headline" id="Parsing_the_Entry_Point_Table"> Parsing the Entry Point Table </span></h2>
+<p>The entry point table has the following structure
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="c source-c"><pre class="de1"> <span class="kw4">struct</span> SMBIOSEntryPoint <span class="br0">{</span>
+ 	<span class="kw4">char</span> EntryPointString<span class="br0">[</span><span class="nu0">4</span><span class="br0">]</span><span class="sy0">;</span>    <span class="co1">//This is _SM_</span>
+ 	uchar Checksum<span class="sy0">;</span>              <span class="co1">//This value summed with all the values of the table, should be 0 (overflow)</span>
+ 	uchar Length<span class="sy0">;</span>                <span class="co1">//Length of the Entry Point Table. Since version 2.1 of SMBIOS, this is 0x1F</span>
+ 	uchar MajorVersion<span class="sy0">;</span>          <span class="co1">//Major Version of SMBIOS</span>
+ 	uchar MinorVersion<span class="sy0">;</span>          <span class="co1">//Minor Version of SMBIOS</span>
+ 	ushort MaxStructureSize<span class="sy0">;</span>     <span class="co1">//Maximum size of a SMBIOS Structure (we will se later)</span>
+ 	uchar EntryPointRevision<span class="sy0">;</span>    <span class="co1">//...</span>
+ 	<span class="kw4">char</span> FormattedArea<span class="br0">[</span><span class="nu0">5</span><span class="br0">]</span><span class="sy0">;</span>       <span class="co1">//...</span>
+ 	<span class="kw4">char</span> EntryPointString2<span class="br0">[</span><span class="nu0">5</span><span class="br0">]</span><span class="sy0">;</span>   <span class="co1">//This is _DMI_</span>
+ 	uchar Checksum2<span class="sy0">;</span>             <span class="co1">//Checksum for values from EntryPointString2 to the end of table</span>
+ 	ushort TableLength<span class="sy0">;</span>          <span class="co1">//Length of the Table containing all the structures</span>
+ 	uint TableAddress<span class="sy0">;</span>	     <span class="co1">//Address of the Table</span>
+ 	ushort NumberOfStructures<span class="sy0">;</span>   <span class="co1">//Number of structures in the table</span>
+ 	uchar BCDRevision<span class="sy0">;</span>           <span class="co1">//Unused</span>
+ <span class="br0">}</span><span class="sy0">;</span></pre></div></div>
+<p>TableAddress contains the address of the table that contains all the structures with information about the PC.
+All of the structures are located from [TableAddress] to [TableAddress + TableLength].
+The structures are located directly adjacent to each other in memory, with a new structure beginning as soon as another one ends.
+Each structure is composed of a header, a structure specific table, and a string table.
+</p><p>The format of the header is as follows.
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="c source-c"><pre class="de1"> <span class="kw4">struct</span> SMBIOSHeader <span class="br0">{</span>
+ 	uchar Type<span class="sy0">;</span>
+ 	uchar Length<span class="sy0">;</span>
+ 	ushort Handle<span class="sy0">;</span>
+ <span class="br0">}</span><span class="sy0">;</span></pre></div></div>
+<p>Located at TableAddress is a SMBIOS header.
+The value of Type indicates what element the structure contains information about. (see Header Types section)
+Length indicates the size of header + data table. The strings are not included in the length.
+</p><p>Immediately after the end of the header is the data. At the end of the data table (Address + Length), the strings section starts. Each string is NULL terminated and is limited to 64 characters.
+</p><p>eg: the BIOS Struct (Type 0) is like this:
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="asm source-asm"><pre class="de1"> <span class="kw4">db</span> <span class="nu0">0</span> <span class="co1">; Indicates BIOS Structure Type            |</span>
+ <span class="kw4">db</span> <span class="nu0">13h</span> <span class="co1">; Length of information in bytes         | HEADER</span>
+ <span class="kw4">dw</span>&nbsp;? <span class="co1">; Reserved for handle                      |</span>
+&nbsp;
+ <span class="kw4">db</span> <span class="nu0">01h</span> <span class="co1">; String 1 is the Vendor Name            |</span>
+ <span class="kw4">db</span> <span class="nu0">02h</span> <span class="co1">; String 2 is the BIOS version           |</span>
+ <span class="kw4">dw</span> <span class="nu0">0E800h</span> <span class="co1">; BIOS Starting Address               |</span>
+ <span class="kw4">db</span> <span class="nu0">03h</span> <span class="co1">; String 3 is the BIOS Build Date        | DATA</span>
+ <span class="kw4">db</span> <span class="nu0">1</span> <span class="co1">; Size of BIOS ROM is 128K (64K * (1 + 1)) |</span>
+ <span class="kw4">dq</span> BIOS_Char <span class="co1">; BIOS Characteristics             |</span>
+ <span class="kw4">db</span> <span class="nu0">0</span> <span class="co1">; BIOS Characteristics Extension Byte 1    |</span>
+&nbsp;
+ <span class="kw4">db</span> ‘System BIOS Vendor <span class="kw4">Name</span>’<span class="sy0">,</span><span class="nu0">0</span> <span class="co1">;                |</span>
+ <span class="kw4">db</span> ‘<span class="nu0">4.04</span>’<span class="sy0">,</span><span class="nu0">0</span> <span class="co1">;                                   | STRINGS</span>
+ <span class="kw4">db</span> ‘<span class="nu0">00</span><span class="sy0">/</span><span class="nu0">00</span><span class="sy0">/</span><span class="nu0">0000</span>’<span class="sy0">,</span><span class="nu0">0</span> <span class="co1">;                             |</span>
+&nbsp;
+ <span class="kw4">db</span> <span class="nu0">0</span> <span class="co1">; End of structure</span></pre></div></div>
+<p>At the end of the BIOS table, another table will start.
+The last structure has type 127.
+</p>
+<h1> <span class="mw-headline" id="Header_Types"> Header Types </span></h1>
+<table class="wikitable">
+
+<tbody><tr>
+<th> Code
+</th>
+<th> Description
+</th></tr>
+<tr>
+<td> 0
+</td>
+<td> BIOS Information
+</td></tr>
+<tr>
+<td> 1
+</td>
+<td> System Information
+</td></tr>
+<tr>
+<td> 2
+</td>
+<td> Mainboard Information
+</td></tr>
+<tr>
+<td> 3
+</td>
+<td> Enclosure/Chasis Information
+</td></tr>
+<tr>
+<td> 4
+</td>
+<td> Processor Information
+</td></tr>
+<tr>
+<td> 7
+</td>
+<td> Cache Information
+</td></tr>
+<tr>
+<td> 9
+</td>
+<td> System Slots Information
+</td></tr>
+<tr>
+<td> 16
+</td>
+<td> Physical Memory Array
+</td></tr>
+<tr>
+<td> 17
+</td>
+<td> Memory Device Information
+</td></tr>
+<tr>
+<td> 19
+</td>
+<td> Memory Mapped Device Mapped Address's
+</td></tr>
+<tr>
+<td> 32
+</td>
+<td> System Boot Information
+</td></tr></tbody></table>
+<p>More details can be found in the Specification (see External Links)
+</p><p><br>
+</p>
+<h1> <span class="mw-headline" id="See_Also">See Also</span></h1>
+<h3> <span class="mw-headline" id="Forum_Threads">Forum Threads</span></h3>
+<ul><li> <a rel="nofollow" class="external free" href="http://www.osdev.org/phpBB2/viewtopic.php?t=16687">http://www.osdev.org/phpBB2/viewtopic.php?t=16687</a> Info (saved here through lack of info)
+</li></ul>
+<h3> <span class="mw-headline" id="External_Links">External Links</span></h3>
+<ul><li> <a rel="nofollow" class="external text" href="http://www.dmtf.org/standards/smbios/">SMBIOS Specification</a>
+</li></ul>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 77/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:2226-0!*!0!!en!*!* and timestamp 20160918040033 -->
+</div>				<!-- /bodycontent -->
+								<!-- printfooter -->
+				<div class="printfooter">
+				Retrieved from "<a href="http://wiki.osdev.org/index.php?title=System_Management_BIOS&amp;oldid=16275">http://wiki.osdev.org/index.php?title=System_Management_BIOS&amp;oldid=16275</a>"				</div>
+				<!-- /printfooter -->
+												<!-- catlinks -->
+				<div id="catlinks" class="catlinks"><div id="mw-normal-catlinks"><a href="http://wiki.osdev.org/Special:Categories" title="Special:Categories">Category</a>: <ul><li><a href="http://wiki.osdev.org/Category:X86" title="Category:X86">X86</a></li></ul></div></div>				<!-- /catlinks -->
+												<div class="visualClear"></div>
+				<!-- debughtml -->
+								<!-- /debughtml -->
+			</div>
+			<!-- /bodyContent -->
+		</div>
+		<!-- /content -->
+		<!-- header -->
+		<div id="mw-head" class="noprint">
+			
+<!-- 0 -->
+<div id="p-personal" class="">
+	<h5>Personal tools</h5>
+	<ul>
+		<li id="pt-login"><a href="http://wiki.osdev.org/index.php?title=Special:UserLogin&amp;returnto=System_Management_BIOS" title="You are encouraged to log in; however, it is not mandatory [alt-o]" accesskey="o">Log in</a></li>
+	</ul>
+</div>
+
+<!-- /0 -->
+			<div id="left-navigation">
+				
+<!-- 0 -->
+<div id="p-namespaces" class="vectorTabs">
+	<h5>Namespaces</h5>
+	<ul>
+					<li id="ca-nstab-main" class="selected"><span><a href="http://wiki.osdev.org/System_Management_BIOS" title="View the content page [alt-c]" accesskey="c">Page</a></span></li>
+					<li id="ca-talk" class="new"><span><a href="http://wiki.osdev.org/index.php?title=Talk:System_Management_BIOS&amp;action=edit&amp;redlink=1" title="Discussion about the content page [alt-t]" accesskey="t">Discussion</a></span></li>
+			</ul>
+</div>
+
+<!-- /0 -->
+
+<!-- 1 -->
+<div id="p-variants" class="vectorMenu emptyPortlet">
+		<h5><span>Variants</span><a href="http://wiki.osdev.org/System_Management_BIOS#"></a></h5>
+	<div class="menu">
+		<ul>
+					</ul>
+	</div>
+</div>
+
+<!-- /1 -->
+			</div>
+			<div id="right-navigation">
+				
+<!-- 0 -->
+<div id="p-views" class="vectorTabs">
+	<h5>Views</h5>
+	<ul>
+					<li id="ca-view" class="selected"><span><a href="http://wiki.osdev.org/System_Management_BIOS">Read</a></span></li>
+					<li id="ca-viewsource"><span><a href="http://wiki.osdev.org/index.php?title=System_Management_BIOS&amp;action=edit" title="This page is protected.
+You can view its source [alt-e]" accesskey="e">View source</a></span></li>
+					<li id="ca-history" class="collapsible"><span><a href="http://wiki.osdev.org/index.php?title=System_Management_BIOS&amp;action=history" title="Past revisions of this page [alt-h]" accesskey="h">View history</a></span></li>
+			</ul>
+</div>
+
+<!-- /0 -->
+
+<!-- 1 -->
+<div id="p-cactions" class="vectorMenu emptyPortlet">
+	<h5><span>Actions</span><a href="http://wiki.osdev.org/System_Management_BIOS#"></a></h5>
+	<div class="menu">
+		<ul>
+					</ul>
+	</div>
+</div>
+
+<!-- /1 -->
+
+<!-- 2 -->
+<div id="p-search">
+	<h5><label for="searchInput">Search</label></h5>
+	<form action="http://wiki.osdev.org/index.php" id="searchform">
+		<input type="hidden" name="title" value="Special:Search">
+				<input type="search" name="search" title="Search OSDev Wiki [alt-f]" accesskey="f" id="searchInput">		<input type="submit" name="go" value="Go" title="Go to a page with this exact name if exists" id="searchGoButton" class="searchButton">		<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton">			</form>
+</div>
+
+<!-- /2 -->
+			</div>
+		</div>
+		<!-- /header -->
+		<!-- panel -->
+			<div id="mw-panel" class="noprint">
+				<!-- logo -->
+					<div id="p-logo"><a style="background-image: url(/skins/common/images/osdev.png);" href="http://wiki.osdev.org/Main_Page" title="Visit the main page"></a></div>
+				<!-- /logo -->
+				
+<!-- navigation -->
+<div class="portal" id="p-navigation">
+	<h5>Navigation</h5>
+	<div class="body">
+		<ul>
+			<li id="n-mainpage"><a href="http://wiki.osdev.org/Main_Page" title="Visit the main page [alt-z]" accesskey="z">Main Page</a></li>
+			<li id="n-portal"><a href="http://forum.osdev.org/" rel="nofollow" title="About the project, what you can do, where to find things">Forums</a></li>
+			<li id="n-FAQ"><a href="http://wiki.osdev.org/Category:FAQ">FAQ</a></li>
+			<li id="n-OS-Projects"><a href="http://wiki.osdev.org/Projects">OS Projects</a></li>
+			<li id="n-randompage"><a href="http://wiki.osdev.org/Special:Random" title="Load a random page [alt-x]" accesskey="x">Random page</a></li>
+		</ul>
+	</div>
+</div>
+
+<!-- /navigation -->
+
+<!-- about -->
+<div class="portal" id="p-about">
+	<h5>About</h5>
+	<div class="body">
+		<ul>
+			<li id="n-This-site"><a href="http://wiki.osdev.org/OSDevWiki:About">This site</a></li>
+			<li id="n-Joining"><a href="http://wiki.osdev.org/OSDevWiki:Joining">Joining</a></li>
+			<li id="n-Editing-help"><a href="http://wiki.osdev.org/OSDevWiki:Editing">Editing help</a></li>
+			<li id="n-recentchanges"><a href="http://wiki.osdev.org/Special:RecentChanges" title="A list of recent changes in the wiki [alt-r]" accesskey="r">Recent changes</a></li>
+		</ul>
+	</div>
+</div>
+
+<!-- /about -->
+
+<!-- SEARCH -->
+
+<!-- /SEARCH -->
+
+<!-- TOOLBOX -->
+<div class="portal" id="p-tb">
+	<h5>Toolbox</h5>
+	<div class="body">
+		<ul>
+			<li id="t-whatlinkshere"><a href="http://wiki.osdev.org/Special:WhatLinksHere/System_Management_BIOS" title="A list of all wiki pages that link here [alt-j]" accesskey="j">What links here</a></li>
+			<li id="t-recentchangeslinked"><a href="http://wiki.osdev.org/Special:RecentChangesLinked/System_Management_BIOS" title="Recent changes in pages linked from this page [alt-k]" accesskey="k">Related changes</a></li>
+			<li id="t-specialpages"><a href="http://wiki.osdev.org/Special:SpecialPages" title="A list of all special pages [alt-q]" accesskey="q">Special pages</a></li>
+			<li><a href="http://wiki.osdev.org/index.php?title=System_Management_BIOS&amp;printable=yes" rel="alternate">Printable version</a></li>
+			<li id="t-permalink"><a href="http://wiki.osdev.org/index.php?title=System_Management_BIOS&amp;oldid=16275" title="Permanent link to this revision of the page">Permanent link</a></li>
+		</ul>
+	</div>
+</div>
+
+<!-- /TOOLBOX -->
+
+<!-- LANGUAGES -->
+
+<!-- /LANGUAGES -->
+			</div>
+		<!-- /panel -->
+		<!-- footer -->
+		<div id="footer">
+							<ul id="footer-info">
+											<li id="footer-info-lastmod"> This page was last modified on 24 April 2014, at 00:41.</li>
+											<li id="footer-info-viewcount">This page has been accessed 26,906 times.</li>
+									</ul>
+							<ul id="footer-places">
+											<li id="footer-places-privacy"><a href="http://wiki.osdev.org/OSDev_Wiki:Privacy_policy" title="OSDev Wiki:Privacy policy">Privacy policy</a></li>
+											<li id="footer-places-about"><a href="http://wiki.osdev.org/OSDev_Wiki:About" title="OSDev Wiki:About">About OSDev Wiki</a></li>
+											<li id="footer-places-disclaimer"><a href="http://wiki.osdev.org/OSDev_Wiki:General_disclaimer" title="OSDev Wiki:General disclaimer">Disclaimers</a></li>
+									</ul>
+										<ul id="footer-icons" class="noprint">
+					<li id="footer-poweredbyico">
+						<a href="http://www.mediawiki.org/"><img src="./System Management BIOS - OSDev Wiki_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" width="88" height="31"></a>
+					</li>
+				</ul>
+						<div style="clear:both"></div>
+		</div>
+		<!-- /footer -->
+		<!-- fixalpha -->
+		<script type="text/javascript"> if ( window.isMSIE55 ) fixalpha(); </script>
+		<!-- /fixalpha -->
+		<script src="./System Management BIOS - OSDev Wiki_files/load(5).php"></script>
+<script>if(window.mw){
+	mw.loader.load(["mediawiki.user", "mediawiki.util", "mediawiki.page.ready", "mediawiki.legacy.wikibits", "mediawiki.legacy.ajax"]);
+}
+</script><script type="text/javascript" src="./System Management BIOS - OSDev Wiki_files/load(6).php"></script>
+<script src="./System Management BIOS - OSDev Wiki_files/load(7).php"></script>
+<script>if(window.mw){
+	mw.user.options.set({"ccmeonemails":0,"cols":80,"date":"default","diffonly":0,"disablemail":0,"disablesuggest":0,"editfont":"default","editondblclick":0,"editsection":1,"editsectiononrightclick":0,"enotifminoredits":0,"enotifrevealaddr":0,"enotifusertalkpages":1,"enotifwatchlistpages":0,"extendwatchlist":0,"externaldiff":0,"externaleditor":0,"fancysig":0,"forceeditsummary":0,"gender":"unknown","hideminor":0,"hidepatrolled":0,"highlightbroken":1,"imagesize":2,"justify":0,"math":1,"minordefault":0,"newpageshidepatrolled":0,"nocache":0,"noconvertlink":0,"norollbackdiff":0,"numberheadings":0,"previewonfirst":0,"previewontop":1,"quickbar":5,"rcdays":7,"rclimit":50,"rememberpassword":0,"rows":25,"searchlimit":20,"showhiddencats":0,"showjumplinks":1,"shownumberswatching":1,"showtoc":1,"showtoolbar":1,"skin":"vector","stubthreshold":0,"thumbsize":2,"underline":2,"uselivepreview":0,"usenewrc":0,"watchcreations":0,"watchdefault":0,"watchdeletion":0,"watchlistdays":3,"watchlisthideanons":0,
+	"watchlisthidebots":0,"watchlisthideliu":0,"watchlisthideminor":0,"watchlisthideown":0,"watchlisthidepatrolled":0,"watchmoves":0,"wllimit":250,"variant":"en","language":"en","searchNs0":true,"searchNs1":false,"searchNs2":false,"searchNs3":false,"searchNs4":false,"searchNs5":false,"searchNs6":false,"searchNs7":false,"searchNs8":false,"searchNs9":false,"searchNs10":false,"searchNs11":false,"searchNs12":false,"searchNs13":false,"searchNs14":false,"searchNs15":false});;mw.user.tokens.set({"editToken":"+\\","watchToken":false});;mw.loader.state({"user.options":"ready","user.tokens":"ready"});
+	
+	/* cache key: wikidb:resourceloader:filter:minify-js:4:19a4b18a9ac79a6b8c60b24af4668814 */
+}
+</script><!-- Served in 0.108 secs. -->
+	
+
+</body></html>

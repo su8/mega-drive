@@ -1,0 +1,23 @@
+find testdisk -type f|while read x; do echo "$x;`stat -c %s $x`">>dat.txt;done
+
+IFS=$'\n'
+a=("`gawk -F';' '{print $1}' dat.txt`")
+b=(`gawk -F';' '{print $2}' dat.txt`)
+unset IFS
+
+echo ${#b[@]}
+
+a='testdisk/blog.tar'
+b=${a//\//\\\/}  # / to \/
+sed -i "/$b/d" dat.txt
+
+
+# replace spaces with \
+${c// /\\ }
+
+# dirname
+${c%/*}
+
+declare -a c;declare -a d;num=0;a=();d=();zx=()
+zx=(`<dat.txt`)
+for x in "${zx[@]}"; do c[$num]="${x%;*}"; d[$num]="${x##*;}"; let num+=1; done

@@ -1,0 +1,46 @@
+<HTML>
+<HEAD>
+<meta charset="utf-8">
+  <script>
+
+// use this document for creating XML
+var doc = document.implementation.createDocument(null, null, null);
+
+// function that creates the XML structure
+function z() {
+    var node = doc.createElement(arguments[0]), text, child;
+
+    for(var i = 1; i < arguments.length; i++) {
+        child = arguments[i];
+        if(typeof child == 'string') {
+            child = doc.createTextNode(child);
+        }
+        node.appendChild(child);
+    }
+    console.log(node);
+    return node;
+};
+
+// create the XML structure recursively
+var root = z('report',
+    z('submitter',
+        z('name', 'John Doe')
+    ),
+    z('students',
+        z('student',
+            z('name', 'Alice'),
+            z('grade', '80')
+        ),
+        z('student',
+            z('name', 'Bob'),
+            z('grade', '90')
+        )
+    )
+);
+console.log(( new XMLSerializer() ).serializeToString( root ));
+</script> 
+</HEAD>
+ 
+<BODY>
+</BODY>
+</HTML>

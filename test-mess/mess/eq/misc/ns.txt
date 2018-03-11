@@ -1,0 +1,10 @@
+nameserver 5.9.49.12
+nameserver 82.211.31.248
+find datest -type d -print0|xargs -0 -I{} mkdir -p /tmp/re/{} 
+find datest -type f -name "*.gpg" -print0| xargs -0 -I{} cp -rf {} /tmp/re/{} 
+find ~/datest/ -type f -neweram /tmp/re/datest/ -print0
+
+#find /tmp/re/datest -type d -print0|xargs -0 -I{} mkdir -p /tmp/re/datest2/{}
+#find /tmp/re/datest -type f -name "*.gpg" -print0| xargs -0 -I{} cp -rf {} /tmp/re/datest2/{}
+#find /tmp/re/datest -type f -neweram /tmp/re/datest2/ -print0
+#find /tmp/re/datest -type f -print0|xargs -0 -I{} gpg --batch --passphrase 'qw' -c {}

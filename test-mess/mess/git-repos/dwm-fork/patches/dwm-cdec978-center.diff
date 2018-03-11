@@ -1,0 +1,42 @@
+Adds an "iscentered" rule to automatically center clients on the current monitor.
+Source: http://dwm.suckless.org/patches/dwm-cdec978-center.diff
+Edited by me to resolve my_patch.diff changes
+--- a/dwm.c	2014-01-23 19:49:50.305463478 +0200
++++ b/dwm.c	2014-01-23 19:49:50.305463478 +0200
+@@ -91,7 +91,7 @@
+ 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
+ 	int bw, oldbw;
+ 	unsigned int tags;
+-	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
++	Bool isfixed, iscentered, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
+ 	Client *next;
+ 	Client *snext;
+ 	Monitor *mon;
+@@ -151,6 +151,7 @@
+ 	const char *instance;
+ 	/*const char *title;*/
+ 	unsigned int tags;
++	Bool iscentered;
+ 	Bool isfloating;
+ 	int monitor;
+ } Rule;
+@@ -312,6 +313,7 @@
+ 		if ((!r->class || strstr(class, r->class))
+ 		&& (!r->instance || strstr(instance, r->instance)))
+ 		{
++			c->iscentered = r->iscentered;
+ 			c->isfloating = r->isfloating;
+ 			c->tags |= r->tags;
+ 			for(m = mons; m && m->num != r->monitor; m = m->next);
+@@ -1143,6 +1145,11 @@
+ 	           && (c->x + (c->w / 2) < c->mon->wx + c->mon->ww)) ? bh : c->mon->my);
+ 	c->bw = borderpx;
+ 
++	if(c->iscentered) {
++		c->x = (c->mon->mw - WIDTH(c)) / 2;
++		c->y = (c->mon->mh - HEIGHT(c)) / 2;
++	}
++
+ 	wc.border_width = c->bw;
+ 	XConfigureWindow(dpy, w, CWBorderWidth, &wc);
+ 	XSetWindowBorder(dpy, w, dc.norm[ColBorder]);

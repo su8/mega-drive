@@ -1,0 +1,72 @@
+This patch saves size and position of every floating window
+before it is forced into tiled mode. If the window is made
+floating again, the old dimensions will be restored.
+
+Source http://dwm.suckless.org/patches/save_floats
+
+Edited by me, mixed http://dwm.suckless.org/patches/dwm-6.0-save_floats.diff
+with http://dwm.suckless.org/patches/dwm-r1606-exresize.diff.
+--- a/dwm.c	2015-02-23 19:49:50.305463478 +0200
++++ b/dwm.c	2015-02-23 19:49:50.305463478 +0200
+@@ -87,6 +87,7 @@
+ 	char name[256];
+ 	float mina, maxa;
+ 	int x, y, w, h;
++	int sfx, sfy, sfw, sfh; /* stored float geometry, used on mode revert */
+ 	int oldx, oldy, oldw, oldh;
+ 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
+ 	int bw, oldbw;
+@@ -1157,6 +1158,10 @@
+ 	updatewindowtype(c);
+ 	updatesizehints(c);
+ 	updatewmhints(c);
++	c->sfx = c->x;
++	c->sfy = c->y;
++	c->sfw = c->w;
++	c->sfh = c->h;
+ 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
+ 	grabbuttons(c, False);
+ 	if(!c->isfloating)
+@@ -1563,8 +1568,18 @@
+ 
+ void
+ setlayout(const Arg *arg) {
+-	if(!arg || !arg->v || arg->v != selmon->lt[selmon->sellt])
++	if(!arg || !arg->v || arg->v != selmon->lt[selmon->sellt]) {
+ 		selmon->sellt ^= 1;
++		if (!selmon->lt[selmon->sellt]->arrange) {
++			for (Client *c = selmon->clients ; c ; c = c->next) {
++				if(!c->isfloating) {
++					/*restore last known float dimensions*/
++					resize(c, selmon->mx + c->sfx, selmon->my + c->sfy,
++					       c->sfw, c->sfh, False);
++				}
++			}
++		}
++	}
+ 	if(arg && arg->v)
+ 		selmon->lt[selmon->sellt] = (Layout *)arg->v;
+ 	strncpy(selmon->ltsymbol, selmon->lt[selmon->sellt]->symbol, sizeof selmon->ltsymbol);
+@@ -1748,9 +1763,19 @@
+ 	if(!selmon->sel)
+ 		return;
+ 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
+-	if(selmon->sel->isfloating)
+-		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
+-		       selmon->sel->w, selmon->sel->h, False);
++	if(selmon->sel->isfloating) {
++		/*restore last known float dimensions*/
++		resize(selmon->sel, selmon->mx + selmon->sel->sfx, selmon->my + selmon->sel->sfy,
++		       selmon->sel->sfw, selmon->sel->sfh, False);
++	} else {
++		if (selmon->sel->isfullscreen)
++			setfullscreen(selmon->sel, False);
++		/*save last known float dimensions*/
++		selmon->sel->sfx = selmon->sel->x - selmon->mx;
++		selmon->sel->sfy = selmon->sel->y - selmon->my;
++		selmon->sel->sfw = selmon->sel->w;
++		selmon->sel->sfh = selmon->sel->h;
++	}
+ 	arrange(selmon);
+ }
+ 

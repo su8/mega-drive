@@ -1,0 +1,44 @@
+;***************************************************************************************************
+
+.data
+mbTitle     db "Vendor String",0
+
+.data?
+buff        db 256 dup (?)
+
+.code
+start:
+    mov eax,80000000h
+    cpuid
+    .IF (eax>=80000005h)
+        push edi
+        lea edi,[buff]
+        mov eax,80000002h
+        cpuid
+        mov [edi+00h],eax
+        mov [edi+04h],ebx
+        mov [edi+08h],ecx
+        mov [edi+0Ch],edx
+        mov eax,80000003h
+        cpuid
+        mov [edi+10h],eax
+        mov [edi+14h],ebx
+        mov [edi+18h],ecx
+        mov [edi+1Ch],edx
+        mov eax,80000004h
+        cpuid
+        mov [edi+20h],eax
+        mov [edi+24h],ebx
+        mov [edi+28h],ecx
+        mov [edi+2Ch],edx
+        mov eax,80000005h
+        cpuid
+        mov [edi+30h],eax
+        mov [edi+34h],ebx
+        mov [edi+38h],ecx
+        mov [edi+3Ch],edx
+        invoke MessageBox, NULL,edi,ADDR mbTitle,MB_OK or MB_ICONINFORMATION
+        pop edi
+    .ENDIF
+    invoke ExitProcess, NULL
+end start

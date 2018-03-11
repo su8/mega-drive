@@ -1,0 +1,650 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- base href="http://nadeausoftware.com/articles/2012/09/c_c_tip_how_get_physical_memory_size_system" --><style type="text/css">body { margin-left:0;margin-right:0;margin-top:0; }#google-cache-hdr {background:#f5f5f5 !important;font:13px arial,sans-serif !important;text-align:left !important;color:#202020 !important;border:0 !important;margin:0 !important;border-bottom:1px solid #cecece !important;line-height:16px !important ;padding:16px 28px 24px 28px !important;}#google-cache-hdr * {display:inline !important;font:inherit !important;text-align:inherit !important;color:inherit !important;line-height:inherit !important;background:none !important;border:0 !important;margin:0 !important;padding:0 !important;letter-spacing:0 !important;}#google-cache-hdr a {text-decoration:none !important;color:#1a0dab !important;}#google-cache-hdr a:hover { text-decoration:underline !important; }#google-cache-hdr a:visited { color:#609 !important; }#google-cache-hdr div { display:block !important;margin-top:4px !important; }#google-cache-hdr b {font-weight:bold !important;display:inline-block !important;direction:ltr !important;}</style></head><body><div id="google-cache-hdr" dir="ltr"><div>This is Google's cache of <a href="http://nadeausoftware.com/articles/2012/09/c_c_tip_how_get_physical_memory_size_system" dir="ltr">http://nadeausoftware.com/articles/2012/09/c_c_tip_how_get_physical_memory_size_system</a>. It is a snapshot of the page as it appeared on Sep 4, 2016 20:10:48 GMT. </div><div>The <a href="http://nadeausoftware.com/articles/2012/09/c_c_tip_how_get_physical_memory_size_system" dir="ltr">current page</a> could have changed in the meantime. <a href="http://support.google.com/websearch/bin/answer.py?hl=en&amp;p=cached&amp;answer=1687222">Learn more</a></div><div></div><div><span style="display:inline-block !important;margin-top:8px !important;margin-right:104px !important;white-space:nowrap !important;"><span style="margin-right:28px !important;"><span style="font-weight:bold !important;">Full version</span></span><span style="margin-right:28px !important;"><a href="http://webcache.googleusercontent.com/search?q=cache:k59DoGEezvwJ:nadeausoftware.com/articles/2012/09/c_c_tip_how_get_physical_memory_size_system&amp;num=1&amp;client=firefox-b&amp;hl=en&amp;gl=us&amp;strip=1&amp;vwsrc=0">Text-only version</a></span><span style="margin-right:28px !important;"><a href="http://webcache.googleusercontent.com/search?q=cache:k59DoGEezvwJ:nadeausoftware.com/articles/2012/09/c_c_tip_how_get_physical_memory_size_system&amp;num=1&amp;client=firefox-b&amp;hl=en&amp;gl=us&amp;strip=0&amp;vwsrc=1">View source</a></span></span><span style="display:inline-block !important;margin-top:8px !important;color:#717171 !important;">Tip: To quickly find your search term on this page, press <b>Ctrl+F</b> or <b>⌘-F</b> (Mac) and use the find bar.</span></div></div><div style="position:relative;">
+
+
+
+
+<meta name="copyright" content="Copyright Nadeau Software Consulting. All rights reserved.">
+<meta name="description" content="This article provides a cross-platform function to get the physical memory size, and explains what works on what OS.">
+<meta name="keywords" content="physical memory size,RAM size,MEMORYSTATUS,MEMORYSTATUSEX,GlobalMemoryStatus,GlobalMemoryStatusEx,sysctl,sysconf,sysinfo,/proc/meminfo">
+<link rel="shortcut icon" href="http://nadeausoftware.com/favicon.gif" type="image/x-icon">
+<style type="text/css" media="all">@import "/sites/NadeauSoftware.com/files/css/d125078869b336dd69d9f5492f6739d3.css";</style>
+<title>C/C++ tip: How to get the physical memory size of a system | Nadeau Software</title>
+
+
+<div id="page-body">
+	<div class="breadcrumb"><a href="http://nadeausoftware.com/">Home</a> » <a href="http://nadeausoftware.com/topics">Articles</a> » <a href="http://nadeausoftware.com/articles/2012">2012</a> » <a href="http://nadeausoftware.com/articles/2012/09">September</a></div>	<div id="page-main" class="article">
+		<h1 class="title">C/C++ tip: How to get the physical memory size of a system</h1><div class="node">
+  <div class="submitted">September 14, 2012  </div>
+      <div class="taxonomy">Topics: <a href="http://nadeausoftware.com/articles/c_c">C/C++</a></div>
+  <div class="content"><p class="summary">API functions  to get  the 
+size of physical memory (RAM) differ between Windows, Linux, OSX, AIX, 
+BSD, Solaris, and other UNIX-style OSes. <strong>This article provides a cross-platform function  to  get the physical memory size,  and explains what works on what OS.</strong></p>
+
+
+
+
+
+<div class="toc">
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#Howtogetphysicalmemorysize">How to get physical memory size</a></li>
+<ol>
+<li><a href="#Code">Code</a></li>
+<li><a href="#Usage">Usage</a></li>
+</ol>
+<li><a href="#Discussion">Discussion</a></li>
+<ol>
+<li><a href="#GlobalMemoryStatusnbspandGlobalMemoryStatusEx">GlobalMemoryStatus(&nbsp;) and GlobalMemoryStatusEx( )</a></li>
+<li><a href="#sysconfnbsp">sysconf(&nbsp;)</a></li>
+<li><a href="#sysctl">sysctl( )</a></li>
+<li><a href="#sysinfonbsp">sysinfo(&nbsp;)</a></li>
+<li><a href="#procmeminfo">/proc/meminfo</a></li>
+<li><a href="#Other">Other</a></li>
+</ol>
+<li><a href="#Downloads">Downloads</a></li>
+<li><a href="#Furtherreading">Further reading</a></li>
+<ol>
+<li><a href="#RelatedarticlesatNadeauSoftwarecom">Related articles at NadeauSoftware.com</a></li>
+<li><a href="#Webarticles">Web articles</a></li>
+</ol>
+</ol>
+</div>
+
+<h2 id="Howtogetphysicalmemorysize">How to get physical memory size</h2>
+<p>Physical memory is the RAM installed on a system.  The size of 
+physical memory is a hard upper bound on the size of a process before 
+parts of it have to be paged to disk or SSD. In practice, some of 
+physical memory is permanently allocated to the kernel and other 
+services that have to stay resident in memory. The remainder of physical
+ memory is managed by the OS and shared among all running processes. No 
+one process will ever get all of physical memory.</p>
+<p>Each OS has command-line or user interface tools to report the 
+physical memory size, but checking it programmatically is useful for 
+large high-performance code that automatically adjusts memory use to 
+different system sizes. Unfortunately, API functions to get the memory 
+size are not standardized and differ from OS to OS.</p>
+<h3 id="Code">Code</h3>
+<p>The following    <strong><code>getMemorySize( )</code></strong> function works for most OSes (copy and paste, or download <a href="http://nadeausoftware.com/sites/NadeauSoftware.com/files/getMemorySize.c">getMemorySize.c</a>). Linking with the default libraries is sufficient.</p>
+<p>See the sections that follow for discussion, caveats, and why this code requires so many <code>#ifdef</code>'s.</p>
+<pre class="code-example">/*
+ * Author:  David Robert Nadeau
+ * Site:    http://NadeauSoftware.com/
+ * License: Creative Commons Attribution 3.0 Unported License
+ *          http://creativecommons.org/licenses/by/3.0/deed.en_US
+ */
+
+#if defined(_WIN32)
+#include &lt;Windows.h&gt;
+
+#elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) &amp;&amp; defined(__MACH__))
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/param.h&gt;
+#if defined(BSD)
+#include &lt;sys/sysctl.h&gt;
+#endif
+
+#else
+#error "Unable to define getMemorySize( ) for an unknown OS."
+#endif
+
+
+
+/**
+ * Returns the size of physical memory (RAM) in bytes.
+ */
+size_t <strong>getMemorySize</strong>( )
+{
+#if defined(_WIN32) &amp;&amp; (defined(__CYGWIN__) || defined(__CYGWIN32__))
+	/* Cygwin under Windows. ------------------------------------ */
+	/* New 64-bit MEMORYSTATUSEX isn't available.  Use old 32.bit */
+	MEMORYSTATUS status;
+	status.dwLength = sizeof(status);
+	GlobalMemoryStatus( &amp;status );
+	return (size_t)status.dwTotalPhys;
+
+#elif defined(_WIN32)
+	/* Windows. ------------------------------------------------- */
+	/* Use new 64-bit MEMORYSTATUSEX, not old 32-bit MEMORYSTATUS */
+	MEMORYSTATUSEX status;
+	status.dwLength = sizeof(status);
+	GlobalMemoryStatusEx( &amp;status );
+	return (size_t)status.ullTotalPhys;
+
+#elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) &amp;&amp; defined(__MACH__))
+	/* UNIX variants. ------------------------------------------- */
+	/* Prefer sysctl() over sysconf() except sysctl() HW_REALMEM and HW_PHYSMEM */
+
+#if defined(CTL_HW) &amp;&amp; (defined(HW_MEMSIZE) || defined(HW_PHYSMEM64))
+	int mib[2];
+	mib[0] = CTL_HW;
+#if defined(HW_MEMSIZE)
+	mib[1] = HW_MEMSIZE;            /* OSX. --------------------- */
+#elif defined(HW_PHYSMEM64)
+	mib[1] = HW_PHYSMEM64;          /* NetBSD, OpenBSD. --------- */
+#endif
+	int64_t size = 0;               /* 64-bit */
+	size_t len = sizeof( size );
+	if ( sysctl( mib, 2, &amp;size, &amp;len, NULL, 0 ) == 0 )
+		return (size_t)size;
+	return 0L;			/* Failed? */
+
+#elif defined(_SC_AIX_REALMEM)
+	/* AIX. ----------------------------------------------------- */
+	return (size_t)sysconf( _SC_AIX_REALMEM ) * (size_t)1024L;
+
+#elif defined(_SC_PHYS_PAGES) &amp;&amp; defined(_SC_PAGESIZE)
+	/* FreeBSD, Linux, OpenBSD, and Solaris. -------------------- */
+	return (size_t)sysconf( _SC_PHYS_PAGES ) *
+		(size_t)sysconf( _SC_PAGESIZE );
+
+#elif defined(_SC_PHYS_PAGES) &amp;&amp; defined(_SC_PAGE_SIZE)
+	/* Legacy. -------------------------------------------------- */
+	return (size_t)sysconf( _SC_PHYS_PAGES ) *
+		(size_t)sysconf( _SC_PAGE_SIZE );
+
+#elif defined(CTL_HW) &amp;&amp; (defined(HW_PHYSMEM) || defined(HW_REALMEM))
+	/* DragonFly BSD, FreeBSD, NetBSD, OpenBSD, and OSX. -------- */
+	int mib[2];
+	mib[0] = CTL_HW;
+#if defined(HW_REALMEM)
+	mib[1] = HW_REALMEM;		/* FreeBSD. ----------------- */
+#elif defined(HW_PYSMEM)
+	mib[1] = HW_PHYSMEM;		/* Others. ------------------ */
+#endif
+	unsigned int size = 0;		/* 32-bit */
+	size_t len = sizeof( size );
+	if ( sysctl( mib, 2, &amp;size, &amp;len, NULL, 0 ) == 0 )
+		return (size_t)size;
+	return 0L;			/* Failed? */
+#endif /* sysctl and sysconf variants */
+
+#else
+	return 0L;			/* Unknown OS. */
+#endif
+}</pre>
+<h3 id="Usage">Usage</h3>
+<p>Just call the function to get the memory size in bytes. If the returned value is zero, the call failed due to OS limitations.</p>
+<pre>size_t memorySize = <strong>getMemorySize</strong>( );</pre>
+<h2 id="Discussion">Discussion</h2>
+<p>Each OS has one or more ways of getting  the physical memory size:</p>
+<table class="article-basic-table">
+  <tbody><tr>
+    <th>OS</th>
+    <th class="col">CPU time</th>
+  </tr>
+  <tr>
+    <td><strong>AIX</strong></td>
+    <td><code>sysconf(&nbsp;) with _SC_AIX_REALMEM</code></td>
+  </tr>
+  <tr>
+    <td><strong>Cygwin</strong></td>
+    <td><code>GlobalMemoryStatus(&nbsp;)</code></td>
+  </tr>
+  <tr>
+    <td><strong>DragonFly BSD</strong></td>
+    <td><code>sysctl(&nbsp;) with HW_PHYSMEM</code></td>
+  </tr>
+  <tr>
+    <td><strong>FreeBSD</strong></td>
+    <td><code>sysconf(&nbsp;) with _SC_PHYS_PAGES, or sysctl(&nbsp;) with HW_REALMEM or HW_PHYSMEM</code></td>
+  </tr>
+  <tr>
+    <td><strong>Linux</strong></td>
+    <td><code>sysconf(&nbsp;) with _SC_PHYS_PAGES,  sysinfo(&nbsp;), or /proc/meminfo</code></td>
+  </tr>
+  <tr>
+    <td><strong>NetBSD</strong></td>
+    <td><code>sysctl(&nbsp;) with HW_PHYSMEM64 or HW_PHYSMEM</code></td>
+  </tr>
+  <tr>
+    <td><strong>OpenBSD</strong></td>
+    <td><code>sysconf(&nbsp;) with _SC_PHYS_PAGES, or sysctl(&nbsp;) with HW_PHYSMEM64 or HW_PHYSMEM</code></td>
+  </tr>
+  <tr>
+    <td><strong>OSX</strong></td>
+    <td><code>sysconf(&nbsp;) with _SC_PHYS_PAGES, or sysctl(&nbsp;) with HW_MEMSIZE or HW_PHYSMEM</code></td>
+  </tr>
+  <tr>
+    <td><strong>Solaris</strong></td>
+    <td><code>sysconf(&nbsp;) with _SC_PHYS_PAGES</code></td>
+  </tr>
+  <tr>
+    <td><strong>Windows</strong></td>
+    <td><code>GlobalMemoryStatus(&nbsp;) or GlobalMemoryStatusEx(&nbsp;)</code></td>
+  </tr>
+</tbody></table>
+<p>Each of these is discussed below.</p>
+<h3 id="GlobalMemoryStatusnbspandGlobalMemoryStatusEx">GlobalMemoryStatus(&nbsp;) and GlobalMemoryStatusEx( )</h3>
+<p>On Windows and  <a href="http://www.cygwin.com/" class="externallink">Cygwin</a> (Linux compatibility  for Windows), the <a href="http://msdn.microsoft.com/en-us/library/aa366586.aspx" class="externallink"><code>GlobalMemoryStatus(&nbsp;)</code></a> function fills a <a href="http://msdn.microsoft.com/en-us/library/aa366772.aspx" class="externallink"><code>MEMORYSTATUS</code></a> struct with information about system memory. Structure fields include:</p>
+<pre>typedef struct _MEMORYSTATUS {
+	DWORD  dwLength;
+	DWORD  dwMemoryLoad;
+<strong>	SIZE_T dwTotalPhys;</strong>
+	SIZE_T dwAvailPhys;
+	SIZE_T dwTotalPageFile;
+	SIZE_T dwAvailPageFile;
+	SIZE_T dwTotalVirtual;
+	SIZE_T dwAvailVirtual;
+} MEMORYSTATUS, *LPMEMORYSTATUS;</pre>
+<p>The <code>dwTotalPhys</code> field contains the physical memory size in bytes. <em>However</em>,
+ the field is only large enough to hold a 32-bit integer. For systems 
+with more than 4 Gbytes of memory, the field is set to -1.</p>
+<p>On Windows, but not Cygwin, the new  <a href="http://msdn.microsoft.com/en-us/library/aa366589%28VS.85%29.aspx" class="externallink"><code>GlobalMemoryStatusEx(&nbsp;)</code></a> function fills a 64-bit safe <a href="http://msdn.microsoft.com/en-us/library/aa366770%28v=vs.85%29.aspx" class="externallink"><code>MEMORYSTATUSEX</code></a> struct with information about physical and virtual memory. Structure fields include:</p>
+<pre>typedef struct _MEMORYSTATUSEX {
+	DWORD     dwLength;
+	DWORD     dwMemoryLoad;
+<strong>	DWORDLONG ullTotalPhys;</strong>
+	DWORDLONG ullAvailPhys;
+	DWORDLONG ullTotalPageFile;
+	DWORDLONG ullAvailPageFile;
+	DWORDLONG ullTotalVirtual;
+	DWORDLONG ullAvailVirtual;
+	DWORDLONG ullAvailExtendedVirtual;
+} MEMORYSTATUSEX, *LPMEMORYSTATUSEX;</pre>
+<p>The 64-bit <code>ullTotalPhys</code> field contains the physical memory size in bytes.</p>
+<p><em>Beware:</em> The <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/cc300158%28v=vs.85%29.aspx" class="externallink"><code>GetPhysicallyInstalledSystemMemory(&nbsp;)</code></a> function (from Vista onwards) returns the size of <em>all</em> memory installed on the system. This value comes from the BIOS and may be larger than the value reported by <code>GlobalMemoryStatusEx(&nbsp;)</code> if the BIOS and low level drivers reserve some memory for memory-mapped devices. While the value from <code>GetPhysicallyInstalledSystemMemory(&nbsp;)</code>
+ may be more literally correct, it's less useful. The amount of memory 
+actually available for use by the OS and processes is usually what we 
+want.</p>
+<p><strong>Availability:</strong> Cygwin and Windows XP and later.</p>
+<p>Get memory size:</p>
+<pre><span class="code-example">#include &lt;Windows.h&gt;
+...
+
+#if defined(__CYGWIN__) || defined(__CYGWIN32__)
+	MEMORYSTATUS status;
+	status.dwLength = sizeof(status);
+	<strong>GlobalMemoryStatus</strong>( &amp;status );
+	return (size_t)status.dwTotalPhys;
+#else
+	MEMORYSTATUSEX status;
+	status.dwLength = sizeof(status);
+	<strong>GlobalMemoryStatusEx</strong>( &amp;status );
+	return (size_t)status.ullTotalPhys;</span>
+#endif</pre>
+<h3 id="sysconfnbsp">sysconf(&nbsp;)</h3>
+<p>On AIX, FreeBSD, Linux, OpenBSD,  and Solaris, <code>sysconf(&nbsp;)</code> returns  basic system configuration information (see man pages for <a href="http://pic.dhe.ibm.com/infocenter/aix/v7r1/index.jsp?topic=/com.ibm.aix.basetechref/doc/basetrf2/sysconf.htm" class="externallink">AIX,</a> <a href="http://www.freebsd.org/cgi/man.cgi?query=sysconf&amp;apropos=0&amp;sektion=3&amp;manpath=FreeBSD+9-current&amp;arch=default&amp;format=html" class="externallink">FreeBSD,</a> <a href="http://www.kernel.org/doc/man-pages/online/pages/man3/sysconf.3.html" class="externallink">Linux,</a> <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=sysconf&amp;sektion=3&amp;format=html" class="externallink">OpenBSD</a>, <a href="http://developer.apple.com/library/mac/#documentation/Darwin/Reference/ManPages/man3/sysconf.3.html" class="externallink">OSX,</a> and <a href="http://docs.oracle.com/cd/E19683-01/816-0213/6m6ne38dd/index.html" class="externallink">Solaris</a>). For FreeBSD and OpenBSD,  the function is available but  <code>sysctl(&nbsp;)</code>  provides more information and a more accurate measure of physical memory (see below).</p>
+<p>The <code>sysconf(&nbsp;)</code> function takes an attribute argument and returns a long integer giving the attribute's value. Though <code>sysconf(&nbsp;)</code> is defined by POSIX, the  attribute for physical memory size is not standardized and varies among the OSes:</p>
+<table class="article-basic-table">
+  <tbody><tr>
+    <th scope="col">OS</th>
+    <th scope="col">sysconf(&nbsp;) attribute</th>
+    <th scope="col">Value</th>
+  </tr>
+  <tr>
+    <td><strong>AIX</strong></td>
+    <td><code>_SC_AIX_REALMEM</code></td>
+    <td>Physical memory size in kilobytes</td>
+  </tr>
+  <tr>
+    <td><strong>FreeBSD, Linux, OpenBSD,  Solaris</strong></td>
+    <td><code>_SC_PHYS_PAGES</code></td>
+    <td>Physical memory size in pages</td>
+  </tr>
+</tbody></table>
+<p>For  <code>_SC_AIX_REALMEM</code>, the return value is in kilobytes.</p>
+<p>For <code>_SC_PHYS_PAGES</code>, the return value is in pages. To convert to bytes, multiply it by the page size from <code>sysconf(&nbsp;)</code> using the <code>_SC_PAGESIZE</code> (or legacy <code>_SC_PAGE_SIZE</code>) attribute. FreeBSD, Linux, and OpenBSD, also provide a <code><a href="http://www.kernel.org/doc/man-pages/online/pages/man2/getpagesize.2.html" class="externallink">getPageSize(&nbsp;)</a></code>
+ function that returns the same value. The physical memory size 
+calculated using the page size is rounded down to the nearest page 
+boundary and may be a bit less than the actual memory on the system.</p>
+<p><strong>Availability:</strong> AIX, FreeBSD, Linux, OpenBSD,  and Solaris.</p>
+<p>Get  memory size:</p>
+<pre>#include &lt;sys/sysctl.h&gt;
+#include &lt;sys/types.h&gt;
+...
+
+#if defined(_SC_AIX_REALMEM)
+	return (size_t)<strong>sysconf</strong>( _SC_AIX_REALMEM ) * (size_t)1024L;
+
+#elif defined(_SC_PHYS_PAGES) &amp;&amp; defined(_SC_PAGESIZE)
+	return (size_t)<strong>sysconf</strong>( _SC_PHYS_PAGES ) * (size_t)<strong>sysconf</strong>( _SC_PAGESIZE );
+
+#elif defined(_SC_PHYS_PAGES) &amp;&amp; defined(_SC_PAGE_SIZE)
+	return (size_t)<strong>sysconf</strong>( _SC_PHYS_PAGES ) * (size_t)<strong>sysconf</strong>( _SC_PAGE_SIZE );
+#endif</pre>
+<h3 id="sysctl">sysctl( )</h3>
+<p>On BSD and OSX, <code>sysctl(&nbsp;)</code> is the preferred method to get  a wide variety of system configuration information (see man pages for <a href="http://leaf.dragonflybsd.org/cgi/web-man?command=sysctl&amp;section=3" class="externallink">DragonFly BSD,</a> <a href="http://www.freebsd.org/cgi/man.cgi?query=sysctl&amp;apropos=0&amp;sektion=3&amp;manpath=FreeBSD+9-current&amp;arch=default&amp;format=html" class="externallink">FreeBSD,</a> <a href="http://netbsd.gw.com/cgi-bin/man-cgi?sysctl+3+NetBSD-current" class="externallink">NetBSD</a>, <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=sysctl&amp;apropos=0&amp;sektion=3&amp;manpath=OpenBSD+Current&amp;arch=i386&amp;format=html" class="externallink">OpenBSD,</a> and <a href="http://developer.apple.com/library/mac/#documentation/Darwin/Reference/ManPages/man3/sysctl.3.html#//apple_ref/doc/man/3/sysctl" class="externallink">OSX</a>). Linux also provides the function, but it's <a href="http://www.kernel.org/doc/man-pages/online/pages/man2/sysctl.2.html" class="externallink">deprecated and strongly discouraged</a> in favor of <code>sysconf(&nbsp;)</code> (see above).</p>
+<p>The <code>sysctl(&nbsp;)</code> function takes an array of integers 
+that select a configuration attribute to query. On success, the function
+ fills a variable with the attribute's value. Attributes are grouped 
+hierarchically and include information about system hardware, the 
+kernel, the network, virtual memory, and more. Hardware attributes are 
+grouped under <code>CTL_HW</code>. The hardware attribute for physical memory size varies among the OSes:</p>
+<table class="article-basic-table">
+  <tbody><tr>
+    <th scope="col">OS</th>
+    <th scope="col">CTL_HW attribute</th>
+    <th scope="col">Value</th>
+  </tr>
+  <tr>
+    <td><strong>FreeBSD</strong></td>
+    <td><code>HW_REALMEM</code></td>
+    <td>Physical memory size in bytes (32-bit integer)</td>
+  </tr>
+  <tr>
+    <td><strong>DragonFly BSD, FreeBSD, NetBSD, OpenBSD, OSX</strong></td>
+    <td><code>HW_PHYSMEM</code></td>
+    <td>Physical memory size in bytes (32-bit integer)</td>
+  </tr>
+  <tr>
+    <td><strong>NetBSD, OpenBSD</strong></td>
+    <td><code>HW_PHYSMEM64</code></td>
+    <td>Physical memory size in bytes (64-bit integer)</td>
+  </tr>
+  <tr>
+    <td><strong>OSX</strong></td>
+    <td><code>HW_MEMSIZE</code></td>
+    <td>Physical memory size in bytes (64-bit integer)</td>
+  </tr>
+</tbody></table>
+<p>The older <code>HW_PHYSMEM</code> attribute is available for BSD and 
+OSX, but it returns a 32-bit unsigned integer that's  too small to hold 
+memory sizes larger than 2 Gbytes. For memory size as a <em>64-bit integer</em>, use <code>HW_PHYSMEM64</code> on NetBSD and OpenBSD, and <code>HW_MEMSIZE</code> on OSX. Unfortunately, FreeBSD and DragonFly BSD currently do not support an attribute to get the memory size in 64-bits.</p>
+<p>FreeBSD and OpenBSD provide both <code>sysctl(&nbsp;)</code> and <code>sysconf(&nbsp;)</code> (see above) to get the physical memory size. The <code>sysctl(&nbsp;)</code> method is more accurate since it returns the size in bytes, while <code>sysconf(&nbsp;)</code> returns the size rounded down to the nearest page boundary.</p>
+<p>FreeBSD provides both <code>HW_REALMEM</code> and <code>HW_PHYSMEM</code>. Both return 32-bit integers, but <code>HW_PHYSMEM</code>'s value is rounded down to the nearest page boundary, like the value computed from <code>sysconf(&nbsp;)</code>, while <code>HW_REALMEM</code>'s value is not. Between, <code>HW_PHYSMEM</code> and <code>sysconf(&nbsp;)</code>, the latter is the better choice. While <code>sysconf(&nbsp;)</code>
+ returns a 32-bit integer too, it's in units of the page size, which is 
+usually 4 Kbytes. This adds another 12 bits to the maximum memory size 
+that can be reported (which is 16 Tbytes).</p>
+<p><strong>Availability:</strong> DragonFly BSD, FreeBSD, NetBSD, OpenBSD, and OSX.</p>
+<p>Get  memory size: </p>
+<pre>#include &lt;unistd.h&gt;
+...
+
+	int mib[2];
+	mib[0] = CTL_HW;
+#if defined(HW_MEMSIZE)
+	mib[1] = HW_MEMSIZE;		/* OSX. --------------------- */
+	int64_t size = 0;		/* 64-bit */
+#elif defined(HW_PHYSMEM64)
+	mib[1] = HW_PHYSMEM64;		/* NetBSD, OpenBSD. --------- */
+	int64_t size = 0;		/* 64-bit */
+#elif defined(HW_REALMEM)
+	mib[1] = HW_REALMEM;		/* FreeBSD. ----------------- */
+	unsigned int size = 0;		/* 32-bit */
+#elif defined(HW_PHYSMEM)
+	mib[1] = HW_PHYSMEM;		/* DragonFly BSD. ----------- */
+	unsigned int size = 0;		/* 32-bit */
+#endif
+	size_t len = sizeof( size );
+	if ( sysctl( mib, 2, &amp;size, &amp;len, NULL, 0 ) == 0 )
+		return (size_t)size;
+	return 0L;	</pre>
+<h3 id="sysinfonbsp">sysinfo(&nbsp;)</h3>
+<p>On Linux, the <code>sysinfo(&nbsp;)</code> function fills a <code>sysinfo</code> struct with system statistics. The struct has the following fields:</p>
+<pre>struct sysinfo {
+	long uptime;   		 /* Seconds since boot */
+	unsigned long loads[3];  /* 1, 5, and 15 minute load averages */
+	<strong>unsigned long totalram;  /* Total usable main memory size */</strong>
+	unsigned long freeram;   /* Available memory size */
+	unsigned long sharedram; /* Amount of shared memory */
+	unsigned long bufferram; /* Memory used by buffers */
+	unsigned long totalswap; /* Total swap space size */
+	unsigned long freeswap;  /* swap space still available */
+	unsigned short procs;    /* Number of current processes */
+	unsigned long totalhigh; /* Total high memory size */
+	unsigned long freehigh;  /* Available high memory size */
+	unsigned int mem_unit;   /* Memory unit size in bytes */
+	char _f[20-2*sizeof(long)-sizeof(int)]; /* Padding for libc5 */
+};</pre>
+<p>Prior to Linux 2.3.23 (late 2003), the <code>sysinfo</code> struct 
+omitted the last four fields and all sizes were in bytes. Today, the 
+larger struct is used and all sizes are in units  given by the <code>mem_unit</code> field. The <code>totalram</code> field times the <code>mem_unit</code> field gives the size of physical memory in bytes.</p>
+<p>The memory size computed from the <code>sysinfo</code> struct is the same as that computed from <code>sysconf(&nbsp;)</code> and the page size (see above). Since the method is redundant, this article's <code>getMemorySize(&nbsp;)</code> function uses <code>sysconf(&nbsp;)</code> instead of <code>sysinfo(&nbsp;)</code>.</p>
+<p><strong>Availability:</strong> Linux.</p>
+<p>Get memory size:</p>
+<pre>#include &lt;sys/sysinfo.h&gt;
+...
+
+struct sysinfo info;
+<strong>sysinfo</strong>( &amp;info );
+return (size_t)info.totalram * (size_t)info.mem_unit;</pre>
+<h3 id="procmeminfo">/proc/meminfo</h3>
+<p>On Linux, the <a href="http://www.kernel.org/doc/man-pages/online/pages/man5/proc.5.html" class="externallink"><code>/proc</code></a> pseudo-file system includes several pseudo-files filled with system configuration information. <code>/proc/meminfo</code> contains detailed information about memory use. Here's sample output from 64-bit Ubuntu Linux 12:</p>
+<pre><strong>MemTotal:        3016120 kB</strong>
+MemFree:         2188204 kB
+Buffers:           25852 kB
+Cached:           322260 kB
+SwapCached:            0 kB
+Active:           420580 kB
+Inactive:         293120 kB
+Active(anon):     366248 kB
+Inactive(anon):    16356 kB
+Active(file):      54332 kB
+Inactive(file):   276764 kB
+Unevictable:          12 kB
+Mlocked:              12 kB
+SwapTotal:       1046524 kB
+SwapFree:        1046524 kB
+Dirty:                16 kB
+Writeback:             0 kB
+AnonPages:        365632 kB
+Mapped:            94504 kB
+Shmem:             17016 kB
+Slab:              37596 kB
+SReclaimable:      19352 kB
+SUnreclaim:        18244 kB
+KernelStack:        2552 kB
+PageTables:        22428 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     2554584 kB
+Committed_AS:    2037044 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:       21548 kB
+VmallocChunk:   34359713720 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:       38848 kB
+DirectMap2M:     3106816 kB
+</pre>
+<p>The format of the file varies a little from Linux to Linux, but all of them have a <strong>MemTotal</strong> line giving the <em>usable</em>
+ physical memory size in kilobytes. This value may be a bit less than 
+actual physical memory since it excludes memory used by the kernel.</p>
+<p>Parsing <code>/proc/meminfo</code> is slower and more involved than calling <code>sysinfo(&nbsp;)</code> or <code>sysconf( )</code> (see above). This article's <code>getMemorySize(&nbsp;)</code> function therefore uses the simpler <code>sysconf(&nbsp;)</code>.</p>
+<p><strong>Availability:</strong> Linux.</p>
+<p>Get memory size:</p>
+<pre>#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+...
+
+	FILE* fp = fopen( "<strong>/proc/meminfo</strong>", "r" );
+	if ( fp != NULL )
+	{
+		size_t bufsize = 1024 * sizeof(char);
+		char* buf      = (char*)malloc( bufsize );
+		long value     = -1L;
+		while ( getline( &amp;buf, &amp;bufsize, fp ) &gt;= 0 )
+		{
+			if ( strncmp( buf, "MemTotal", 8 ) != 0 )
+				continue;
+			sscanf( buf, "%*s%ld", amp;&amp;value );
+			break;
+		}
+		fclose( fp );
+		free( (void*)buf );
+		if ( value != -1L )
+			return (size_t)value * 1024L );
+	}</pre>
+<h3 id="Other">Other</h3>
+<p>Every OS with a windowing interface has a control panel somewhere 
+that shows the installed memory size. On Windows, see the "System" 
+control panel. On OSX, select "About This Mac" from the Apple menu. On 
+Solaris, select "About Oracle Solaris" from the "System" menu. For 
+Ubuntu Linux, select the "Details" control panel. And so forth.</p>
+<p>Every OS with a command line has commands to show the system configuration. On Windows, see the <a href="http://technet.microsoft.com/en-us/library/cc771190%28v=WS.10%29.aspx" class="externallink"><code>systeminfo</code></a> command. On Linux, see <a href="http://linux.die.net/man/1/free" class="externallink"><code>free</code></a><code> </code>and <a href="http://linux.die.net/man/8/vmstat" class="externallink"><code>vmstat.</code></a>     On BSD and OSX, use <code><a href="https://developer.apple.com/library/mac/#documentation/Darwin/Reference/ManPages/man8/sysctl.8.html" class="externallink">sysctl.</a></code> On OSX, use <a href="https://developer.apple.com/library/mac/#documentation/Darwin/Reference/ManPages/man8/system_profiler.8.html" class="externallink"><code>system_profiler</code>.</a> On Solaris, use <a href="http://docs.oracle.com/cd/E23824_01/html/821-1462/prtconf-1m.html" class="externallink"><code>prtconf.</code></a>  And so on.</p>
+<h2 id="Downloads">Downloads</h2>
+<ul>
+  <li><a href="http://nadeausoftware.com/sites/NadeauSoftware.com/files/getMemorySize.c">getMemorySize.c</a> provides the above C function. Compile it with any standard C compiler. The source is licensed under the <a href="http://creativecommons.org/licenses/by/3.0/deed.en_US" class="externallink">Creative Commons Attribution 3.0 Unported License.</a></li>
+</ul>
+<h2 id="Furtherreading">Further reading</h2>
+<h3 id="RelatedarticlesatNadeauSoftwarecom">Related articles at NadeauSoftware.com</h3>
+<ul class="link-list-flush">
+<li><a href="http://nadeausoftware.com/articles/2012/01/c_c_tip_how_use_compiler_predefined_macros_detect_operating_system">C/C++ tip: How to use compiler predefined macros to detect the operating system</a> explains how to use <code>#ifdef</code> macros for OS-specific code. A lot of these are used in the code above to detect Windows, OSX, Linux, BSD, etc.</li>
+<li><a href="http://nadeausoftware.com/articles/2012/07/c_c_tip_how_get_process_resident_set_size_physical_memory_use">C/C++ tip: How to get the process resident set size (physical memory use)</a> provides functions to get the amount of physical memory in use by a process.</li>
+</ul>
+<h3 id="Webarticles">Web articles</h3>
+<ul class="link-list-flush">
+  <li><a href="http://msdn.microsoft.com/en-us/library/aa366778.aspx" class="externallink">Memory Limits for Windows Releases</a> at Microsoft.com lists the maximum memory sizes allowed by different Windows versions and their licenses.</li>
+  <li><a href="http://blogs.technet.com/b/markrussinovich/archive/2008/07/21/3092070.aspx" class="externallink">Pushing the Limits of Windows:  Physical Memory</a> explains  Windows memory management and its various limits.
+  </li>
+</ul></div>
+</div>
+<div id="comments"><h2>Comments</h2><a id="comment-4424"></a>
+<div class="comment clear-block">
+  
+
+  <h3><a href="http://nadeausoftware.com/articles/2012/09/c_c_tip_how_get_physical_memory_size_system#comment-4424" class="active">Very helpful info!</a></h3>
+
+  <div class="submitted">
+    Submitted by Anonymous (not verified) on September 26, 2012 - 6:38am.  </div>
+
+  <div class="content">
+    <p>Very helpful info! Thanks!</p>
+<p>But is sysctl() HW_REALMEM on FreeBSD really "Physical memory size in
+ bytes (64-bit integer)"? Seems to me it is "unsigned long" (4 bytes on 
+32-bit FreeBSD, 8 bytes on 64-bit FreeBSD).</p>
+  </div>
+
+  <ul class="links"><li class="first last comment_reply"><a href="http://nadeausoftware.com/comment/reply/114/4424" class="comment_reply">reply</a></li>
+</ul></div>
+<div class="indented"><a id="comment-4599"></a>
+<div class="comment clear-block">
+  
+
+  <h3><a href="http://nadeausoftware.com/articles/2012/09/c_c_tip_how_get_physical_memory_size_system#comment-4599" class="active">Re:  Very helpful info!</a></h3>
+
+  <div class="submitted">
+    Submitted by Dave_Nadeau on September 30, 2012 - 7:24pm.  </div>
+
+  <div class="content">
+    <p>Thanks for catching a bug.  The proper return type for FreeBSD's <tt>HW_REALMEM</tt> is a 32-bit integer, not the 64-bit integer used in the original version of this article.</p>  </div>
+
+  <ul class="links"><li class="first last comment_reply"><a href="http://nadeausoftware.com/comment/reply/114/4599" class="comment_reply">reply</a></li>
+</ul></div>
+</div><a id="comment-12788"></a>
+<div class="comment clear-block">
+  
+
+  <h3><a href="http://nadeausoftware.com/articles/2012/09/c_c_tip_how_get_physical_memory_size_system#comment-12788" class="active">Code for HP-UX</a></h3>
+
+  <div class="submitted">
+    Submitted by Anonymous (not verified) on October 31, 2012 - 9:25pm.  </div>
+
+  <div class="content">
+    Following code will make the program work on HP-UX as well.
+
+<pre style="code">/* HP-UX. --------------------------------------------------- */
+struct pst_static pst;
+
+if (pstat_getstatic(&amp;pst, sizeof(pst), (size_t) 1, 0) != -1)
+	return (size_t)pst.physical_memory * (size_t)pst.page_size;
+return 0L;
+</pre>  </div>
+
+  <ul class="links"><li class="first last comment_reply"><a href="http://nadeausoftware.com/comment/reply/114/12788" class="comment_reply">reply</a></li>
+</ul></div>
+  <div class="box">
+    <h2 class="title">Post new comment</h2>    <div class="content"><form action="/comment/reply/114" accept-charset="UTF-8" method="post" id="comment-form">
+<div><div class="form-item" id="edit-name-wrapper">
+ <label for="edit-name">Your name: </label>
+ <input maxlength="60" name="name" id="edit-name" size="30" value="Anonymous" class="form-text" type="text">
+</div>
+<div class="form-item" id="edit-mail-wrapper">
+ <label for="edit-mail">E-mail: </label>
+ <input maxlength="64" name="mail" id="edit-mail" size="30" class="form-text" type="text">
+ <div class="description">The content of this field is kept private and will not be shown publicly.</div>
+</div>
+<div class="form-item" id="edit-homepage-wrapper">
+ <label for="edit-homepage">Homepage: </label>
+ <input maxlength="255" name="homepage" id="edit-homepage" size="30" class="form-text" type="text">
+</div>
+<div class="form-item" id="edit-subject-wrapper">
+ <label for="edit-subject">Subject: </label>
+ <input maxlength="64" name="subject" id="edit-subject" size="60" class="form-text" type="text">
+</div>
+<div class="form-item" id="edit-comment-wrapper">
+ <label for="edit-comment">Comment: <span class="form-required" title="This field is required.">*</span></label>
+ <textarea cols="60" rows="15" name="comment" id="edit-comment" class="form-textarea resizable required"></textarea>
+</div>
+<ul class="tips"><li>Allowed HTML tags: &lt;a&gt; &lt;em&gt; 
+&lt;strong&gt; &lt;cite&gt; &lt;code&gt; &lt;ul&gt; &lt;ol&gt; 
+&lt;li&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt;</li><li>Lines and paragraphs break automatically.</li><li>Web page addresses and e-mail addresses turn into links automatically.</li></ul><p><a href="http://nadeausoftware.com/filter/tips">More information about formatting options</a></p><input name="form_id" id="edit-comment-form" value="comment_form" type="hidden">
+<input name="op" id="edit-preview" value="Preview comment" class="form-submit" type="submit">
+
+</div></form>
+</div>
+ </div>
+
+</div>	</div>
+			<div id="footer">Copyright © Nadeau Software Consulting (Dr. David R. Nadeau).  All rights reserved.
+<div class="footer-links">
+<a href="http://nadeausoftware.com/about/privacy_policy">Privacy policy</a> |
+<a href="http://nadeausoftware.com/about/terms_use">Terms of use</a> |
+<a href="http://nadeausoftware.com/sitemap">Site map</a></div>
+</div>
+	</div>
+<div id="page-gradient"></div>
+<div id="page-upperleft"></div>
+<div id="page-upperright"></div>
+<div id="page-logo">
+	<a href="http://nadeausoftware.com/" title="Home"><img src="memory_files/logo.png" alt="Home"></a></div>
+<div id="page-id-shadow">
+	<span id="page-sitename-shadow">Nadeau</span>
+	<span id="page-sitename2-shadow">software consulting</span>
+</div>
+<div id="page-id">
+	<span id="page-sitename"><a href="http://nadeausoftware.com/" title="Home">Nadeau</a></span>
+	<span id="page-sitename2"><a href="http://nadeausoftware.com/" title="Home">software consulting</a></span>
+</div>
+<div id="page-menu">  <div class="block block-block" id="block-block-1">
+    <h2 class="title"></h2>
+    <div class="content"><ul class="menu">
+<li class="expanded"><a href="http://nadeausoftware.com/articles">Articles</a>
+<ul class="menu">
+<li class="leaf">Programming
+<ul class="menu">
+<li class="leaf"><a href="http://nadeausoftware.com/articles/c_c">C/C++</a></li>
+<li class="leaf"><a href="http://nadeausoftware.com/articles/java">Java</a></li>
+<li class="leaf"><a href="http://nadeausoftware.com/articles/php">PHP</a></li>
+</ul></li>
+<li class="leaf">Technique
+<ul class="menu">
+<li class="leaf"><a href="http://nadeausoftware.com/articles/text_processing">Text processing</a></li>
+<li class="leaf"><a href="http://nadeausoftware.com/articles/user_interfaces">User interfaces</a></li>
+<li class="leaf"><a href="http://nadeausoftware.com/articles/visualization">Visualization</a></li>
+</ul></li>
+<li class="leaf">Web
+<ul class="menu">
+<li class="leaf"><a href="http://nadeausoftware.com/articles/web_servers">Apache</a></li>
+<li class="leaf"><a href="http://nadeausoftware.com/articles/drupal">Drupal</a></li>
+<li class="leaf"><a href="http://nadeausoftware.com/articles/web_site_performance">Site performance</a></li>
+<li class="leaf"><a href="http://nadeausoftware.com/articles/safe_web_use">Spam blocking</a></li>
+<li class="leaf"><a href="http://nadeausoftware.com/articles/web_authoring">Web authoring</a></li>
+</ul></li>
+</ul></li>
+<li class="leaf"><a href="http://nadeausoftware.com/books">Books</a></li>
+<li class="leaf"><a href="http://nadeausoftware.com/about">About</a></li>
+</ul></div>
+ </div>
+</div>
+<div id="page-search"><form action="/articles/2012/09/c_c_tip_how_get_physical_memory_size_system" accept-charset="UTF-8" method="post" id="search-theme-form">
+<div><div id="search" class="container-inline"><div class="form-item" id="edit-search-theme-form-keys-wrapper">
+ <input maxlength="128" name="search_theme_form_keys" id="edit-search-theme-form-keys" size="15" title="Enter the terms you wish to search for." class="form-text" type="text">
+</div>
+<input name="op" id="edit-submit" value="Search" class="form-submit" type="submit">
+<input name="form_id" id="edit-search-theme-form" value="search_theme_form" type="hidden">
+</div>
+</div></form>
+</div>
+
+</div></body></html>

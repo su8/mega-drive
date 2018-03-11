@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+
+# Copyright 03/20/2016 Aaron Caffrey https://github.com/wifiextender
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+
+# Adjust those variables
+SOURCE_FILES="$HOME/encrypted_cloud"
+PASSWORD_FILE='/tmp/pws'
+
+
+### Don't touch anything below this line ###
+[[ ! -d "${SOURCE_FILES}" ]] && mkdir --mode=700 "${SOURCE_FILES}"
+[[ ! -f "${PASSWORD_FILE}" ]] && { printf '%s\n' 'Missing password file'; exit 1 ;}
+declare -a _check_lockfile_db1
+declare -a _check_lockfile_db2
+declare -a _file_in_copy_arr
+declare -a _check_filez
+declare -a _new_size
+
+
+__is_file_in_copy() {
+    for y in {1..5}
+    do
+        sleep 1
+        _file_in_copy_arr[${y}]=$(date -r "${2}" +%F%R%S)
+    done
+
+    [[ "${1}" == 'db1' ]] && _check_lockfile_db1=("${_file_in_copy_arr[@]}") || \
+        _check_lockfile_db2=("${_file_in_copy_arr[@]}")
+}
+
+while true
+do
+    _check_filez=(`find "${SOURCE_FILES}" -type f ! -name "*.gpg"`)
+
+    [[ ! -z "${_check_filez[@]}" ]] && {
+
+        find "${SOURCE_FILES}" -type f ! -name "*.gpg" | {
+            while read x
+            do
+                #x="${x/\/}"
+
+                _lock_file="${x//\//.}"
+                _lock_file="/tmp/${_lock_file// /.}-lock"
+
+                # Deleted files -> catch 'em
+                [[ ! -f "${x}" ]] && continue
+                [[ -f "${_lock_file}" ]] && [[ ! -f "${x}" ]] && rm -rf "${_lock_file}"
+
+                # Process the catched in-copy file
+                [[ -f "${_lock_file}" ]] && {
+                    __is_file_in_copy 'db1'  "${x}"
+                    __is_file_in_copy 'db2'  "${x}"
+
+                    [[ " ${_check_lockfile_db1[@]} " =~ " ${_check_lockfile_db2[@]} " ]] \
+                        && rm -rf "${_lock_file}" || continue
+                } || {
+
+                    _orig_size=$(stat -c %s "${x}")
+
+                    # Is ${x} in-copy progress ?
+                    for z in {1..5}
+                    do
+                        sleep 0.2
+                        _new_size[${z}]=$(stat -c %s "${x}")
+                    done
+
+                    [[ ! " ${_new_size[@]} " =~ " ${_orig_size} " ]] && {
+                        touch "${_lock_file}"
+                        continue
+                    }
+
+                    gpg --batch --quiet --yes --passphrase-file "${PASSWORD_FILE}" \
+                    --cert-digest-algo SHA512 --cipher-algo AES256 \
+                    --digest-algo SHA512 --s2k-cipher-algo AES256 --s2k-digest-algo SHA512 \
+                    --s2k-mode 3 --s2k-count 64981052 --compress-algo 0 --symmetric "${x}"
+
+                    rm -rf "${x}"
+                }
+
+            done
+        }
+    }
+
+    # Be resource friendly
+    sleep 2
+
+done
+unset PASSWORD_FILE

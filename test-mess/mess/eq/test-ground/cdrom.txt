@@ -1,0 +1,4 @@
+/sys/class/block/sr0/device > cat model 
+DRW-24B3ST      
+/sys/class/block/sr0/device > cat vendor 
+ASUS
